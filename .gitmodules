@@ -10,3 +10,6 @@
 [submodule "thirdparty/jsoncpp/src"]
 	path = thirdparty/jsoncpp/src
 	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "thirdparty/StormByte/system"]
+	path = thirdparty/StormByte/system
+	url = https://github.com/StormBytePP/StormByte-System.git

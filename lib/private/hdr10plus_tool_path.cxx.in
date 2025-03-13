@@ -1,0 +1,3 @@
+/*#include <media/hdr10plustool.hxx>
+
+const std::filesystem::path HDR10PlusTool::c_hdr10plus_tool_path	= "@HDR10PLUS_TOOL_EXECUTABLE@";*/

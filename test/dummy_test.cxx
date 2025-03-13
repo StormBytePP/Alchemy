@@ -1,10 +1,8 @@
-#include <dummy.hxx>
-#include <json/json.h>
+#include <media/ffmpeg.hxx>
 
 #include "test_handlers.h"
 
 int dummy_test() {
-	std::cout << Alchemy::Dummy::dummy() << std::endl;
 	RETURN_TEST("dummy_test", 0);
 }
 

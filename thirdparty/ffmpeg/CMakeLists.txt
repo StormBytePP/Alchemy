@@ -16,11 +16,11 @@ if (NOT FFMPEG_EXECUTABLE OR NOT FFPROBE_EXECUTABLE)
 		install(FILES
 		"${ffmpeg_SOURCE_DIR}/bin/ffmpeg.exe"
 		"${ffmpeg_SOURCE_DIR}/bin/ffprobe.exe"
-		DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/thirdparty"
+		DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
 		)
 
-		set(FFMPEG_EXECUTABLE "${CMAKE_INSTALL_PREFIX}/bin/thirdparty/ffmpeg.exe")
-		set(FFPROBE_EXECUTABLE "${CMAKE_INSTALL_PREFIX}/bin/thirdparty/ffprobe.exe")
+		set(FFMPEG_EXECUTABLE "%CURRENTDIR%" / "bin" / "ffmpeg.exe")
+		set(FFPROBE_EXECUTABLE "%CURRENTDIR%" / "bin" / "ffprobe.exe")
 	else()
 		message(FATAL_ERROR "FFmpeg not found and not on Windows, aborting.")
 	endif()
@@ -31,3 +31,10 @@ endif()
 
 mark_as_advanced(FFMPEG_EXECUTABLE)
 mark_as_advanced(FFPROBE_EXECUTABLE)
+
+# Autogenerate a file for setting the FFMpeg paths
+configure_file(
+    ${CMAKE_SOURCE_DIR}/lib/private/ffmpeg_path.cxx.in
+    ${CMAKE_BINARY_DIR}/ffmpeg_path.cxx
+    @ONLY
+)
