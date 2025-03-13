@@ -1,0 +1,42 @@
+include(GNUInstallDirs)
+
+# Sources
+file(GLOB_RECURSE ALCHEMY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/*.cxx")
+
+# Library
+add_library(Alchemy SHARED ${ALCHEMY_SOURCES})
+target_link_libraries(Alchemy PUBLIC StormByte::Multimedia JsonCpp::JsonCpp)
+set_target_properties(Alchemy PROPERTIES
+	LINKER_LANGUAGE CXX
+	SOVERSION		${CMAKE_PROJECT_VERSION}
+	VERSION 		${CMAKE_PROJECT_VERSION}
+)
+
+# Compile options
+if(MSVC)
+	target_compile_options(Alchemy PRIVATE /wd4251 /EHsc /O2 /Gs)
+	target_link_options(Alchemy PRIVATE /LTCG /GL)
+else()
+	set(CMAKE_CXX_FLAGS_DEBUG "-pipe -g -ggdb -Wall -Wextra -Wnon-virtual-dtor -pedantic -pedantic-errors -O0")
+	target_compile_options(Alchemy PRIVATE -fvisibility=hidden $<$<COMPILE_LANGUAGE:CXX>:-fvisibility-inlines-hidden>)
+endif()
+
+# Include directories
+target_include_directories(Alchemy
+	SYSTEM BEFORE PUBLIC "${CMAKE_CURRENT_LIST_DIR}/public" "${CMAKE_CURRENT_LIST_DIR}/private"
+)
+
+# Install
+if (NOT STORMBYTE_AS_DEPENDENCY)
+	install(TARGETS Alchemy
+		ARCHIVE 		DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+		LIBRARY 		DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+		RUNTIME 		DESTINATION ${CMAKE_INSTALL_BINDIR}
+	)
+	install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/public/"
+		DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Alchemy"
+		FILES_MATCHING
+		PATTERN "*.h"
+		PATTERN "*.hxx"
+	)
+endif()

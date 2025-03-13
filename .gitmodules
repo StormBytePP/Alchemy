@@ -1,0 +1,12 @@
+[submodule "thirdparty/hdr10plus_tool/src"]
+	path = thirdparty/hdr10plus_tool/src
+	url = https://github.com/quietvoid/hdr10plus_tool.git
+[submodule "thirdparty/StormByte/base"]
+	path = thirdparty/StormByte/base
+	url = https://github.com/StormBytePP/StormByte.git
+[submodule "thirdparty/StormByte/multimedia"]
+	path = thirdparty/StormByte/multimedia
+	url = https://github.com/StormBytePP/StormByte-Multimedia.git
+[submodule "thirdparty/jsoncpp/src"]
+	path = thirdparty/jsoncpp/src
+	url = https://github.com/open-source-parsers/jsoncpp.git

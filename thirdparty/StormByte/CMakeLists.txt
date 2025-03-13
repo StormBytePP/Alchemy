@@ -1,0 +1,8 @@
+option(WITH_SYSTEM_STORMBYTE "Use system StormByte" OFF)
+if(WITH_SYSTEM_STORMBYTE)
+	find_package(StormByte REQUIRED COMPONENTS Multimedia)
+else()
+	set(STORMBYTE_AS_DEPENDENCY TRUE)
+	add_subdirectory(base)
+	add_subdirectory(multimedia)
+endif()

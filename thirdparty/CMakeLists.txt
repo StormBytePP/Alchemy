@@ -1,0 +1,4 @@
+add_subdirectory(ffmpeg)
+add_subdirectory(hdr10plus_tool)
+add_subdirectory(jsoncpp)
+add_subdirectory(StormByte)
