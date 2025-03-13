@@ -1,6 +1,6 @@
 #pragma once
 
-#include <definitions.h>
+#include <StormByte/platform.h>
 
 #ifdef WINDOWS
 	#ifdef Alchemy_EXPORTS

@@ -1,6 +1,5 @@
-#include <media/ffmpeg.hxx>
-
-#include "test_handlers.h"
+#include <Alchemy/media/ffmpeg.hxx>
+#include <StormByte/test_handlers.h>
 
 int dummy_test() {
 	RETURN_TEST("dummy_test", 0);

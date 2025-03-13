@@ -1,4 +1,4 @@
-#include <media/ffmpeg.hxx>
+#include <Alchemy/media/ffmpeg.hxx>
 
 const std::filesystem::path Alchemy::FFMpeg::c_ffmpeg_path 		= "@FFMPEG_EXECUTABLE@";
 const std::filesystem::path Alchemy::FFMpeg::c_ffprobe_path 	= "@FFPROBE_EXECUTABLE@";
