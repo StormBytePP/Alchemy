@@ -90,7 +90,7 @@ jobs:
         uses: ./.github/actions/setup-ninja
 
       - name: Configure Windows environment
-        uses: ilammy/msvc-dev-cmd@v1.9.0
+        uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: ${{ matrix.arch }}
 
