@@ -49,13 +49,11 @@ jobs:
     - name: Install CMake
       run: sudo apt install -y cmake
 
+    - name: Install FFmpeg
+      run: sudo apt install -y ffmpeg
+
     - name: Pretending hdr10plus_tool is installed
       run: sudo touch /usr/bin/hdr10plus_tool && sudo chmod +x /usr/bin/hdr10plus_tool
-
-    - name: Pretending ffmpeg is installed
-      run: |
-        sudo touch /usr/bin/ffmpeg && sudo chmod +x /usr/bin/ffmpeg
-        sudo touch /usr/bin/ffprobe && sudo chmod +x /usr/bin/ffprobe
 
     - name: Configure CMake
       run: |
@@ -94,11 +92,9 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
 
-      - name: Pretend hdr10plus_tool and ffmpeg are installed
+      - name: Pretend hdr10plus_tool is installed
         run: |
           New-Item -ItemType File -Path "C:\Windows\System32\hdr10plus_tool.exe" -Force
-          New-Item -ItemType File -Path "C:\Windows\System32\ffmpeg.exe" -Force
-          New-Item -ItemType File -Path "C:\Windows\System32\ffprobe.exe" -Force
 
       - name: Configure CMake
         run: cmake -B ${{ github.workspace }}\build -G "Ninja" -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TEST=ON -DWITH_SYSTEM_STORMBYTE=OFF

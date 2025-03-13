@@ -1,0 +1,7 @@
+#include <Alchemy/media/ffmpeg.hxx>
+
+const std::filesystem::path Alchemy::FFMpeg::c_ffmpeg_path 									= "@FFMPEG_EXECUTABLE@";
+const std::filesystem::path Alchemy::FFMpeg::c_ffprobe_path 								= "@FFPROBE_EXECUTABLE@";
+const std::string Alchemy::FFMpeg::c_version_string											= "@FFMPEG_VERSION@";
+const std::unordered_map<std::string, std::string> Alchemy::FFMpeg::c_codec_registry		= {@FFMPEG_CODEC_REGISTRY@};
+const std::unordered_map<std::string, std::string> Alchemy::FFMpeg::c_format_registry		= {@FFMPEG_FORMAT_REGISTRY@};

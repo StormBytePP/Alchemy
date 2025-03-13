@@ -4,6 +4,8 @@
 
 #include <regex>
 #include <filesystem>
+#include <string>
+#include <unordered_map>
 
 /**
  * @namespace Alchemy
@@ -16,37 +18,45 @@ namespace Alchemy {
 			 * @brief Copy constructor.
 			 * @param other The FFMpeg object to copy.
 			 */
-			FFMpeg(const FFMpeg& other)						= default;
+			FFMpeg(const FFMpeg& other)									= default;
 
 			/**
 			 * @brief Move constructor.
 			 * @param other The FFMpeg object to move.
 			 */
-			FFMpeg(FFMpeg&& other) noexcept					= default;
+			FFMpeg(FFMpeg&& other) noexcept								= default;
 
 			/**
 			 * @brief Copy assignment operator.
 			 * @param other The FFMpeg object to copy.
 			 * @return A reference to this object.
 			 */
-			FFMpeg& operator=(const FFMpeg& other)			= default;
+			FFMpeg& operator=(const FFMpeg& other)						= default;
 
 			/**
 			 * @brief Move assignment operator.
 			 * @param other The FFMpeg object to move.
 			 * @return A reference to this object.
 			 */
-			FFMpeg& operator=(FFMpeg&& other) noexcept		= default;
+			FFMpeg& operator=(FFMpeg&& other) noexcept					= default;
 
 			/**
 			 * @brief Default destructor.
 			 */
-			~FFMpeg() noexcept 								= default;
+			~FFMpeg() noexcept 											= default;
+
+			/**
+			 * @brief Gets ffmpeg version
+			 * @return Version string
+			 */
+			static std::string 											Version();
 
 		private:
-			static const std::filesystem::path 				c_ffmpeg_path;				/**< The path to the FFMpeg executable. */
-			static const std::filesystem::path 				c_ffprobe_path;				/**< The path to the FFProbe executable. */
-			static const std::regex 						c_supported_codecs_regex;	/**< The regular expression to match the FFMpeg version. */
+			static const std::filesystem::path 							c_ffmpeg_path;				///< The path to the FFMpeg executable.
+			static const std::filesystem::path 							c_ffprobe_path;				///< The path to the FFProbe executable.
+			static const std::string 									c_version_string;			///< The path to the FFMpeg executable.
+			static const std::unordered_map<std::string, std::string>	c_codec_registry;			///< The list of supported codecs.
+			static const std::unordered_map<std::string, std::string>	c_format_registry;			///< The list of supported formats.
 			
 			/**
 			 * @brief Default constructor.
