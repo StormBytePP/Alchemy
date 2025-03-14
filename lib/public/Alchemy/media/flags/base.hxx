@@ -3,8 +3,7 @@
 #include <Alchemy/visibility.h>
 
 #include <array>
-#include <cctype>
-#include <cstring>
+#include <string>
 
 /**
  * @namespace Flags
@@ -22,11 +21,11 @@ namespace Alchemy::Media::Flags {
 			 * @brief Constructor.
 			 * @param flags The flags.
 			 */
-			Base(const char* flags) {
+			Base(const std::string& flags) {
 				// Safe initialization
 				m_flags.fill('.');
-				const std::size_t length = std::strlen(flags);
-				for (std::size_t i = 0; i < N && i < length; ++i) {
+				const auto length = flags.length();
+				for (auto i = 0; i < N && i < length; ++i) {
 					if (std::isalpha(flags[i])) m_flags[i] = flags[i];
 				}
 			}
@@ -61,6 +60,10 @@ namespace Alchemy::Media::Flags {
 			 * @brief Default destructor.
 			 */
 			virtual ~Base() noexcept 								= default;
+
+			std::string 											ToString() const {
+				return std::string(m_flags.data(), N);
+			}
 
 		protected:
 			std::array<char, N> 									m_flags;		///< The flags.

@@ -19,7 +19,7 @@ namespace Alchemy::Media::Flags {
 			 * @brief Constructor.
 			 * @param flags The flags.
 			 */
-			Codec(const char* flags);
+			Codec(const std::string& flags);
 
 			/**
 			 * @brief Copy constructor.
@@ -81,8 +81,5 @@ namespace Alchemy::Media::Flags {
 			 * @return The codec type.
 			 */
 			StormByte::Multimedia::Media::Type 							Type() const;
-
-		private:
-			std::array<char, 5> 										m_flags;		///< The flags.
 	};	
 }

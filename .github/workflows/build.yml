@@ -106,7 +106,14 @@ jobs:
         run: |
           copy ${{ github.workspace }}\build\thirdparty\StormByte\base\lib\StormByte.dll ${{ github.workspace }}\build\test
           copy ${{ github.workspace }}\build\thirdparty\StormByte\multimedia\lib\StormByte-Multimedia.dll ${{ github.workspace }}\build\test
+          copy ${{ github.workspace }}\build\thirdparty\StormByte\system\lib\StormByte-System.dll ${{ github.workspace }}\build\test
           copy ${{ github.workspace }}\build\lib\Alchemy.dll ${{ github.workspace }}\build\test
+
+      - name: Copy FFmpeg
+        run: |
+          mkdir ${{ github.workspace }}\build\test\bin
+          copy ${{ github.workspace }}\build\_deps\ffmpeg-src\bin\ffmpeg.exe ${{ github.workspace }}\build\test\bin
+          copy ${{ github.workspace }}\build\_deps\ffmpeg-src\bin\ffprobe.exe ${{ github.workspace }}\build\test\bin
 
       - name: Run unit tests
         run: ctest --output-on-failure --test-dir ${{ github.workspace }}\build

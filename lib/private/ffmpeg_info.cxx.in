@@ -1,9 +1,25 @@
 #include <Alchemy/media/ffmpeg.hxx>
+#include <StormByte/util/system.hxx>
+
+#include <filesystem>
 
 using namespace Alchemy::Media;
 
-const char* FFMpeg::Version															= "@FFMPEG_VERSION@";
-const char* FFMpeg::c_ffmpeg_path 													= "@FFMPEG_EXECUTABLE@";
-const char* FFMpeg::c_ffprobe_path 													= "@FFPROBE_EXECUTABLE@";
-const std::unordered_map<const char*, Flags::Codec> FFMpeg::c_codec_registry		= {@FFMPEG_CODEC_REGISTRY@};
-const std::unordered_map<const char*, Flags::Container> FFMpeg::c_format_registry	= {@FFMPEG_FORMAT_REGISTRY@};
+// Those need to be const char* because they are used in the early initialization
+// of another static methods which will fail if we return std::filesystem::path here
+const std::filesystem::path FFMpeg::FFMpegPath() {
+	#ifdef WINDOWS
+	static const std::filesystem::path _ffmpeg_path = StormByte::Util::System::CurrentPath() / @FFMPEG_EXECUTABLE@;
+	return _ffmpeg_path.string().c_str();
+	#else
+	return "@FFMPEG_EXECUTABLE@";
+	#endif
+};
+
+const std::filesystem::path FFMpeg::FFProbePath() {
+	#ifdef WINDOWS
+	return StormByte::Util::System::CurrentPath() / @FFPROBE_EXECUTABLE@;
+	#else
+	return "@FFPROBE_EXECUTABLE@";
+	#endif
+};

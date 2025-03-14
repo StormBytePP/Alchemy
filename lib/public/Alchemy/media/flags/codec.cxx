@@ -1,10 +1,10 @@
 #include <Alchemy/media/flags/codec.hxx>
 
 #include <cstring>
-
+#include <iostream>
 using namespace Alchemy::Media::Flags;
 
-Codec::Codec(const char* flags):Base(flags) {}
+Codec::Codec(const std::string& flags):Base(flags) {}
 
 bool Codec::DecodeSupported() const {
 	return m_flags[0] == 'D';
