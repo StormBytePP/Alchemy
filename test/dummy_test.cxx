@@ -4,7 +4,7 @@
 using namespace Alchemy;
 
 int dummy_test() {
-	std::cout << FFMpeg::Version() << std::endl;
+	std::cout << Media::FFMpeg::Version << std::endl;
 	RETURN_TEST("dummy_test", 0);
 }
 
