@@ -1,121 +1,64 @@
 #pragma once
 
+#include <StormByte/alias.hxx>
+#include <StormByte/exception.hxx>
+#include <StormByte/multimedia/media/codec.hxx>
+#include <StormByte/multimedia/media/type.hxx>
+#include <Alchemy/media/alias.hxx>
 #include <Alchemy/media/flags/codec.hxx>
 
 #include <string>
-#include <span>
+#include <unordered_map>
 #include <vector>
 
 /**
- * @namespace Media
- * @brief All the media related classes and functions.
+ * @namespace Codec
+ * @brief The namespace for all multimedia media codec information.
  */
-namespace Alchemy::Media {
+namespace Alchemy::Media::Codec {
+	using Name = StormByte::Multimedia::Media::Codec::Name;	///< Alias for the codec name.
+	using Type = StormByte::Multimedia::Media::Type;		///< Alias for the codec type.
+
 	/**
-	 * @brief The codec structure.
+	 * @struct CodecInfo
+	 * @brief Holds detailed information about a codec.
 	 */
-	class ALCHEMY_PUBLIC Codec {
-		public:
+	struct ALCHEMY_PUBLIC Info {
+		Name s_name;						///< Name of the codec
+		Type s_type;						///< Type of the codec.
+		Flags::Codec s_flags;				///< Flags of the codec.
+		Encoders s_encoders;				///< List of encoders.
+		Decoders s_decoders;				///< List of decoders.
+	};
+
+	/**
+	 * @class CodecRegistry
+	 * @brief Centralized registry to manage codec-related metadata.
+	 */
+	struct ALCHEMY_PUBLIC Registry {
 		/**
-		 * @brief Constructor.
-		 * @param name The name of the codec.
-		 * @param flags The flags of the codec.
+		 * @brief Retrieves detailed information about a codec.
+		 * @param codec The codec enum value.
+		 * @return A reference to the CodecInfo struct for the requested codec.
 		 */
-		Codec(const std::string& name, const std::string& flags);
+		static StormByte::Expected<std::shared_ptr<const Codec::Info>, StormByte::Multimedia::CodecNotFound> Info(const Name& codec);
 
 		/**
-		 * @brief Constructor.
-		 * @param name The name of the codec.
-		 * @param flags The flags of the codec.
+		 * @brief Retrieves detailed information about a codec by name.
+		 * @param codecName The name of the codec.
+		 * @return A reference to the CodecInfo struct for the requested codec.
 		 */
-		Codec(std::string&& name, std::string&& flags);
+		static StormByte::Expected<std::shared_ptr<const Codec::Info>, StormByte::Multimedia::CodecNotFound> Info(const std::string& codecName);
 
-		/**
-		 * @brief Copy constructor.
-		 * @param other The Codec object to copy.
-		 */
-		Codec(const Codec& other)									= default;
+		private:
+			static const std::unordered_map<std::string, Name> 							c_codec_name_map;	///< The codec name map.
+			static const std::unordered_map<Name, std::shared_ptr<const Codec::Info>>	c_codec_registry; 	///< The codec registry.
 
-		/**
-		 * @brief Move constructor.
-		 * @param other The Codec object to move.
-		 */
-		Codec(Codec&& other) noexcept								= default;
-
-		/**
-		 * @brief Copy assignment operator.
-		 * @param other The Codec object to copy.
-		 * @return A reference to this object.
-		 */
-		Codec& operator=(const Codec& other)						= default;
-
-		/**
-		 * @brief Move assignment operator.
-		 * @param other The Codec object to move.
-		 * @return A reference to this object.
-		 */
-		Codec& operator=(Codec&& other) noexcept					= default;
-
-		/**
-		 * @brief Default destructor.
-		 */
-		~Codec() noexcept 											= default;
-
-		/**
-		 * @brief Get the name of the codec.
-		 * @return The name of the codec.
-		 */
-		const std::string& 											Name() const;
-
-		/**
-		 * @brief Get the flags of the codec.
-		 * @return The flags of the codec.
-		 */
-		const Flags::Codec& 										Flags() const;
-
-		/**
-		 * @brief Get the encoders supported by the codec.
-		 * @return The encoders supported by the codec.
-		 */
-		constexpr std::span<const std::string> 						Encoders() const {
-			return {m_encoders.data(), m_encoders.size()};
-		}
-
-		/**
-		 * @brief Set the encoders supported by the codec.
-		 * @param encoders The encoders supported by the codec.
-		 */
-		void 														Encoders(const std::vector<std::string>& encoders);
-		/**
-		 * @brief Set the encoders supported by the codec.
-		 * @param encoders The encoders supported by the codec.
-		 */
-		void 														Encoders(std::vector<std::string>&& encoders);
-
-		/**
-		 * @brief Get the decoders supported by the codec.
-		 * @return The decoders supported by the codec.
-		 */
-		constexpr std::span<const std::string> 						Decoders() const {
-			return {m_decoders.data(), m_decoders.size()};
-		}
-
-		/**
-		 * @brief Set the decoders supported by the codec.
-		 * @param decoders The decoders supported by the codec.
-		 */
-		void 														Decoders(const std::vector<std::string>& decoders);
-
-		/**
-		 * @brief Set the decoders supported by the codec.
-		 * @param decoders The decoders supported by the codec.
-		 */
-		void 														Decoders(std::vector<std::string>&& decoders);
-
-	private:
-		std::string m_name; 						///< The name of the codec.
-		Flags::Codec m_flags; 						///< The flags of the codec.
-		std::vector<std::string> m_encoders; 		///< The encoders supported by the codec.
-		std::vector<std::string> m_decoders; 		///< The decoders supported by the codec.
+			/**
+			 * @brief Splits string into a set of words.
+			 * @param str The string to split.
+			 * @return The set of words.
+			 */
+			static std::vector<std::string> 																SplitToVector(const std::string& str);
 	};
 }

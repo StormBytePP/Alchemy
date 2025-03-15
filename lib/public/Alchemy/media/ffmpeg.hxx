@@ -1,9 +1,7 @@
 #pragma once
 
-#include <Alchemy/media/alias.hxx>
-#include <Alchemy/media/codec.hxx>
 #include <Alchemy/exception.hxx>
-
+#include <Alchemy/media/alias.hxx>
 #include <StormByte/alias.hxx>
 
 #include <filesystem>
@@ -48,35 +46,7 @@ namespace Alchemy::Media {
 			/**
 			 * @brief Default destructor.
 				*/
-				~FFMpeg() noexcept 																= default;
-
-			/**
-			 * @brief Get codec information
-			 * @param name The name of the codec.
-			 * @return Codec
-			 */
-			static std::shared_ptr<const Codec>													Codec(const std::string& name);
-			
-			/**
-			 * @brief Get the version of the FFMpeg library.
-			 * @return The version of the FFMpeg library.
-			 */
-			static const std::string 															Version();
-
-			/**
-			 * @brief Get the list of streams.
-			 * @param path The path to the file.
-¡			 * @return The list of streams.
-			 */
-			static StormByte::Expected<FFMpeg, Exception>										FromFile(const std::filesystem::path& path);
-
-		private:
-			Streams																				m_streams;					///< The list of streams.
-
-			/**
-			 * @brief Default constructor.
-			 */
-			FFMpeg() noexcept 																	= default;
+			~FFMpeg() noexcept 																	= default;
 
 			/**
 			 * @brief Path to FFMpeg executable
@@ -89,19 +59,27 @@ namespace Alchemy::Media {
 			 * @return The path to the FFProbe executable.
 			 */
 			static const std::filesystem::path													FFProbePath();
+			
+			/**
+			 * @brief Get the list of streams.
+			 * @param path The path to the file.
+¡			 * @return The list of streams.
+			 */
+			static StormByte::Expected<FFMpeg, Exception>										FromFile(const std::filesystem::path& path);
 
 			/**
-			 * @brief Get the list of supported codecs.
-			 * @return The list of supported codecs.
+			 * @brief Get the version of the FFMpeg library.
+			 * @return The version of the FFMpeg library.
 			 */
-			static const std::unordered_map<std::string, std::shared_ptr<const Media::Codec>>	CodecRegistry;
+			static const std::string 															Version();
+
+		private:
+			Streams																				m_streams;					///< The list of streams.
 
 			/**
-			 * @brief Splits string into a set of words.
-			 * @param str The string to split.
-			 * @return The set of words.
+			 * @brief Default constructor.
 			 */
-			static std::vector<std::string> 													SplitToVector(const std::string& str);
+			FFMpeg() noexcept 																	= default;
 
 			/**
 			 * @brief Parse JSON string.

@@ -1,4 +1,5 @@
 #include <Alchemy/media/ffmpeg.hxx>
+#include <Alchemy/media/codec.hxx>
 #include <StormByte/test_handlers.h>
 #include <StormByte/exception.hxx>
 #include <StormByte/util/system.hxx>
@@ -25,35 +26,34 @@ int version_test() {
 	RETURN_TEST("version_test", result);
 }
 
-int codec_registry_test() {
-	int result = 0;
-	try {
-		const auto& hevc_codec = Media::FFMpeg::Codec("hevc");
-		if (!hevc_codec) {
-			RETURN_TEST("codec_registry_test", 1);
-		}
-
-		std::cout << "Can encode HEVC: " << std::boolalpha << hevc_codec->Flags().EncodeSupported() << std::endl;
-
-		ASSERT_TRUE("codec_registry_test", hevc_codec->Flags().EncodeSupported());
+int codec_hevc_test() {
+	const auto& hevc_codec = Media::Codec::Registry::Info("hevc");
+	if (!hevc_codec) {
+		std::cerr << "HEVC not supported and it should!" << std::endl;
+		RETURN_TEST("codec_registry_test", 1);
 	}
-	catch (const StormByte::Exception& ex) {
-		std::cerr << "ERROR: " << ex.what() << std::endl;
-		result++;
-	}
-	catch (const std::exception& ex) {
-		std::cerr << "ERROR: Unknown exception: " << ex.what() << std::endl;
-		result++;
+	
+	const auto& hevc_codec_info = Media::Codec::Registry::Info(Media::Codec::Name::H265);
+	if (!hevc_codec_info) {
+		std::cerr << "HEVC not supported and it should!" << std::endl;
+		RETURN_TEST("codec_registry_test", 1);
 	}
 
-	RETURN_TEST("codec_registry_test", result);
+	if (!hevc_codec_info.value()->s_flags.EncodeSupported()) {
+		std::cerr << "HEVC encode not supported and it should!" << std::endl;
+		RETURN_TEST("codec_registry_test", 1);
+	}
+
+	std::cout << "HEVC codec (type " << StormByte::Multimedia::Media::TypeToString(hevc_codec_info.value()->s_type) << ") found and encode supported." << std::endl;
+
+	RETURN_TEST("codec_registry_test", 0);
 }
 
 int main() {
 	int counter = 0;
 	try {
 		counter += version_test();
-		counter += codec_registry_test();
+		counter += codec_hevc_test();
 	}
 	catch (...) {
 		std::cerr << "ERROR: Unknown exception" << std::endl;
