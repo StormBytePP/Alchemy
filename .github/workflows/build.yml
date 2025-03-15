@@ -104,16 +104,15 @@ jobs:
 
       - name: Copy DLLs
         run: |
-          copy ${{ github.workspace }}\build\thirdparty\StormByte\base\lib\StormByte.dll ${{ github.workspace }}\build\test
-          copy ${{ github.workspace }}\build\thirdparty\StormByte\multimedia\lib\StormByte-Multimedia.dll ${{ github.workspace }}\build\test
-          copy ${{ github.workspace }}\build\thirdparty\StormByte\system\lib\StormByte-System.dll ${{ github.workspace }}\build\test
-          copy ${{ github.workspace }}\build\lib\Alchemy.dll ${{ github.workspace }}\build\test
+          Copy-Item -Path "${{ github.workspace }}\build\thirdparty\jsoncpp\JsonCpp.dll" -Destination "${{ github.workspace }}\build\test" -Force
+          Copy-Item -Path "${{ github.workspace }}\build\thirdparty\StormByte\base\lib\StormByte.dll" -Destination "${{ github.workspace }}\build\test" -Force
+          Copy-Item -Path "${{ github.workspace }}\build\thirdparty\StormByte\multimedia\lib\StormByte-Multimedia.dll" -Destination "${{ github.workspace }}\build\test" -Force
+          Copy-Item -Path "${{ github.workspace }}\build\thirdparty\StormByte\system\lib\StormByte-System.dll" -Destination "${{ github.workspace }}\build\test" -Force
+          Copy-Item -Path "${{ github.workspace }}\build\lib\Alchemy.dll" -Destination "${{ github.workspace }}\build\test" -Force
 
       - name: Copy FFmpeg
         run: |
-          mkdir ${{ github.workspace }}\build\test\bin
-          copy ${{ github.workspace }}\build\_deps\ffmpeg-src\bin\ffmpeg.exe ${{ github.workspace }}\build\test\bin
-          copy ${{ github.workspace }}\build\_deps\ffmpeg-src\bin\ffprobe.exe ${{ github.workspace }}\build\test\bin
+          Copy-Item -Path "${{ github.workspace }}\build\_deps\ffmpeg-src\bin" -Destination "${{ github.workspace }}\build\test" -Recurse -Force
 
       - name: Run unit tests
         run: ctest --output-on-failure --test-dir ${{ github.workspace }}\build

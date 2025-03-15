@@ -1,8 +1,13 @@
 #pragma once
 
+#include <Alchemy/media/alias.hxx>
 #include <Alchemy/media/codec.hxx>
+#include <Alchemy/exception.hxx>
+
+#include <StormByte/alias.hxx>
 
 #include <filesystem>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -57,21 +62,45 @@ namespace Alchemy::Media {
 			 */
 			static const std::string 														Version();
 
+			/**
+			 * @brief Get the list of streams.
+			 * @param path The path to the file.
+¡			 * @return The list of streams.
+			 */
+			static StormByte::Expected<FFMpeg, Exception>									FromFile(const std::filesystem::path& path);
+
 		private:
-			/* The following needs to be const char* to be accessed for other static initializators */
-			static const std::filesystem::path												FFMpegPath();				///< The path to the FFMpeg executable.
-			static const std::filesystem::path												FFProbePath();				///< The path to the FFProbe executable.
-			
+			Streams																			m_streams;					///< The list of streams.
+
 			/**
 			 * @brief Default constructor.
 			 */
 			FFMpeg() noexcept 																= default;
 
 			/**
+			 * @brief Path to FFMpeg executable
+			 * @return The path to the FFMpeg executable.
+			 */
+			static const std::filesystem::path												FFMpegPath();
+
+			/**
+			 * @brief Path to FFProbe executable
+			 * @return The path to the FFProbe executable.
+			 */
+			static const std::filesystem::path												FFProbePath();
+
+			/**
 			 * @brief Splits string into a set of words.
 			 * @param str The string to split.
 			 * @return The set of words.
 			 */
-			static std::vector<std::string> SplitToVector(const std::string& str);
+			static std::vector<std::string> 												SplitToVector(const std::string& str);
+
+			/**
+			 * @brief Parse JSON string.
+			 * @param json The JSON string.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Streams, Exception>									ParseJSon(const std::string& json);
 	};
 }
