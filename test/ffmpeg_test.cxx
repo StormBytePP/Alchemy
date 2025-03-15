@@ -28,8 +28,10 @@ int version_test() {
 int codec_registry_test() {
 	int result = 0;
 	try {
-		const auto& codec_registry = Media::FFMpeg::CodecRegistry();
-		const auto& hevc_codec = codec_registry.at("hevc");
+		const auto& hevc_codec = Media::FFMpeg::Codec("hevc");
+		if (!hevc_codec) {
+			RETURN_TEST("codec_registry_test", 1);
+		}
 
 		std::cout << "Can encode HEVC: " << std::boolalpha << hevc_codec->Flags().EncodeSupported() << std::endl;
 

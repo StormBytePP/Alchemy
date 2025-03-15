@@ -22,7 +22,16 @@ const std::string FFMpeg::Version() {
 	return "Unknown";
 }
 
-const std::unordered_map<std::string, std::shared_ptr<const Codec>> FFMpeg::CodecRegistry() {
+std::shared_ptr<const Codec> FFMpeg::Codec(const std::string& name) {
+	const auto& codec = CodecRegistry.find(name);
+
+	if (codec != CodecRegistry.end())
+		return codec->second;
+	else
+		return nullptr;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<const Codec>> FFMpeg::CodecRegistry = []() -> std::unordered_map<std::string, std::shared_ptr<const Media::Codec>> {
 	static const std::regex codecRegex(R"(^ ([A-Z.]{6}) ([A-Za-z0-9_]+) (.+)$)");
 	StormByte::System::Process process(FFMpegPath(), {"-codecs", "-hide_banner"});
 	std::string result;
@@ -32,7 +41,7 @@ const std::unordered_map<std::string, std::shared_ptr<const Codec>> FFMpeg::Code
 		result = StormByte::Util::String::SanitizeNewlines(result);
 	#endif
 	process.Wait();
-	std::unordered_map<std::string, std::shared_ptr<const Codec>> codec_registry;
+	std::unordered_map<std::string, std::shared_ptr<const Media::Codec>> codec_registry;
 	std::smatch match;
 	std::istringstream stream(result);
 	std::string line;
@@ -40,7 +49,7 @@ const std::unordered_map<std::string, std::shared_ptr<const Codec>> FFMpeg::Code
 		if (std::regex_search(line, match, codecRegex)) {
 			const std::string& name = match[2];
 			const std::string& flags = match[1];
-			Codec codec { name, flags };
+			Media::Codec codec { name, flags };
 			if (match[3].matched) {
 				static const std::regex decodersRegex(R"(\(decoders:\s+([^)]+)\))");
     			static const std::regex encodersRegex(R"(\(encoders:\s+([^)]+)\))");
@@ -53,11 +62,11 @@ const std::unordered_map<std::string, std::shared_ptr<const Codec>> FFMpeg::Code
 					codec.Encoders(SplitToVector(match_sub[1]));
 				}
 			}
-			codec_registry.insert({ name, std::make_shared<const Codec>(std::move(codec)) });
+			codec_registry.insert({ name, std::make_shared<const Media::Codec>(std::move(codec)) });
 		}
 	}
 	return codec_registry;
-}
+}();
 
 std::vector<std::string> FFMpeg::SplitToVector(const std::string& str) {
     std::istringstream iss(str);
