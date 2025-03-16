@@ -1,5 +1,5 @@
 #include <Alchemy/media/registry.hxx>
-#include <Alchemy/media/ffmpeg.hxx>
+#include <Alchemy/ffmpeg.hxx>
 #include <StormByte/multimedia/media/registry.hxx>
 #include <StormByte/system/process.hxx>
 #include <StormByte/util/string.hxx>
@@ -10,7 +10,7 @@ using namespace Alchemy::Media;
 
 const std::unordered_map<std::string, Codec::Name> Registry::c_codec_name_map = []() -> std::unordered_map<std::string, Codec::Name> {
     static const std::regex codecRegex(R"(^ ([A-Z.]{6}) ([A-Za-z0-9_]+) (.+)$)");
-	StormByte::System::Process process(FFMpeg::FFMpegPath(), {"-codecs", "-hide_banner"});
+	StormByte::System::Process process(Alchemy::FFMpeg::FFMpegPath(), {"-codecs", "-hide_banner"});
 	std::string result;
 	process >> result;
 	#ifdef WINDOWS
@@ -38,7 +38,7 @@ const std::unordered_map<std::string, Codec::Name> Registry::c_codec_name_map = 
 const std::unordered_map<Codec::Name, std::shared_ptr<const Codec::Info>> Registry::c_codec_registry = []() -> std::unordered_map<Codec::Name, std::shared_ptr<const Codec::Info>> {
 	// Since we can't know the initialization order we need to initialize from ffmpeg's output also
     static const std::regex codecRegex(R"(^ ([A-Z.]{6}) ([A-Za-z0-9_]+) (.+)$)");
-	StormByte::System::Process process(FFMpeg::FFMpegPath(), {"-codecs", "-hide_banner"});
+	StormByte::System::Process process(Alchemy::FFMpeg::FFMpegPath(), {"-codecs", "-hide_banner"});
 	std::string result;
 	process >> result;
 	#ifdef WINDOWS

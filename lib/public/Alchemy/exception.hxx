@@ -53,4 +53,48 @@ namespace Alchemy {
 			 */
 			virtual ~Exception() noexcept 							= default;
 	};
+
+	/**
+	 * @class StreamError
+	 * @brief Exception thrown when a stream error occurs.
+	 */
+	class ALCHEMY_PUBLIC StreamError:public Exception {
+		public:
+			/**
+			 * @brief Constructor.
+			 * @param message The message of the exception.
+			 */
+			StreamError(const std::string& message);
+
+			/**
+			 * @brief Copy constructor.
+			 * @param other The StreamError object to copy.
+			 */
+			StreamError(const StreamError& other) 						= default;
+
+			/**
+			 * @brief Move constructor.
+			 * @param other The StreamError object to move.
+			 */
+			StreamError(StreamError&& other) noexcept 					= default;
+
+			/**
+			 * @brief Copy assignment operator.
+			 * @param other The StreamError object to copy.
+			 * @return A reference to this object.
+			 */
+			StreamError& operator=(const StreamError& other) 			= default;
+
+			/**
+			 * @brief Move assignment operator.
+			 * @param other The StreamError object to move.
+			 * @return A reference to this object.
+			 */
+			StreamError& operator=(StreamError&& other) noexcept 		= default;
+
+			/**
+			 * @brief Destructor.
+			 */
+			~StreamError() noexcept override							= default;
+	};
 }

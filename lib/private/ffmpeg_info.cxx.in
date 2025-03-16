@@ -1,9 +1,7 @@
-#include <Alchemy/media/ffmpeg.hxx>
+#include <Alchemy/ffmpeg.hxx>
 #include <StormByte/util/system.hxx>
 
-#include <filesystem>
-
-using namespace Alchemy::Media;
+using namespace Alchemy;
 
 // Those need to be const char* because they are used in the early initialization
 // of another static methods which will fail if we return std::filesystem::path here

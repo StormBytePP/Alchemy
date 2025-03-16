@@ -1,6 +1,8 @@
 #pragma once
 
+#include <Alchemy/exception.hxx>
 #include <Alchemy/media/flags/base.hxx>
+#include <StormByte/alias.hxx>
 #include <StormByte/multimedia/media/type.hxx>
 
 #include <array>
@@ -25,61 +27,61 @@ namespace Alchemy::Media::Flags {
 			 * @brief Copy constructor.
 			 * @param other The Codec object to copy.
 			 */
-			Codec(const Codec& other)									= default;
+			Codec(const Codec& other)											= default;
 
 			/**
 			 * @brief Move constructor.
 			 * @param other The Codec object to move.
 			 */
-			Codec(Codec&& other) noexcept								= default;
+			Codec(Codec&& other) noexcept										= default;
 
 			/**
 			 * @brief Copy assignment operator.
 			 * @param other The Codec object to copy.
 			 * @return A reference to this object.
 			 */
-			Codec& operator=(const Codec& other)						= default;
+			Codec& operator=(const Codec& other)								= default;
 
 			/**
 			 * @brief Move assignment operator.
 			 * @param other The Codec object to move.
 			 * @return A reference to this object.
 			 */
-			Codec& operator=(Codec&& other) noexcept					= default;
+			Codec& operator=(Codec&& other) noexcept							= default;
 
 			/**
 			 * @brief Default destructor.
 			 */
-			~Codec() noexcept 											= default;
+			~Codec() noexcept 													= default;
 
 			/**
 			 * @brief Checks if the codec supports encoding.
 			 * @return True if the codec supports encoding, false otherwise.
 			 */
-			bool 														EncodeSupported() const;
+			bool 																EncodeSupported() const;
 
 			/**
 			 * @brief Checks if the codec supports decoding.
 			 * @return True if the codec supports decoding, false otherwise.
 			 */
-			bool 														DecodeSupported() const;
+			bool 																DecodeSupported() const;
 
 			/**
 			 * @brief Checks if the codec supports lossy encoding.
 			 * @return True if the codec supports lossy encoding, false otherwise.
 			 */
-			bool 														LossySupported() const;
+			bool 																LossySupported() const;
 
 			/**
 			 * @brief Checks if the codec supports lossless encoding.
 			 * @return True if the codec supports lossless encoding, false otherwise.
 			 */
-			 bool 														LosslessSupported() const;
+			 bool 																LosslessSupported() const;
 
 			/**
 			 * @brief Gets the codec type.
 			 * @return The codec type.
 			 */
-			StormByte::Multimedia::Media::Type 							Type() const;
+			StormByte::Expected<StormByte::Multimedia::Media::Type, Exception>	Type() const;
 	};	
 }

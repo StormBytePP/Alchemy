@@ -3,6 +3,7 @@
 #include <Alchemy/exception.hxx>
 #include <Alchemy/media/alias.hxx>
 #include <StormByte/alias.hxx>
+#include <StormByte/multimedia/media/tags.hxx>
 
 #include <filesystem>
 #include <memory>
@@ -10,11 +11,14 @@
 #include <unordered_map>
 #include <vector>
 
+// Forward declarations
+namespace Json { class Value; }
+
 /**
  * @namespace Media
  * @brief All the media related classes and functions.
  */
-namespace Alchemy::Media {
+namespace Alchemy {
 	class ALCHEMY_PUBLIC FFMpeg {
 		public:
 			/**
@@ -46,7 +50,7 @@ namespace Alchemy::Media {
 			/**
 			 * @brief Default destructor.
 				*/
-			~FFMpeg() noexcept 																	= default;
+			virtual ~FFMpeg() noexcept 															= default;
 
 			/**
 			 * @brief Path to FFMpeg executable
@@ -65,7 +69,7 @@ namespace Alchemy::Media {
 			 * @param path The path to the file.
 ¡			 * @return The list of streams.
 			 */
-			static StormByte::Expected<FFMpeg, Exception>										FromFile(const std::filesystem::path& path);
+			static StormByte::Expected<FFMpeg, StreamError>										FromFile(const std::filesystem::path& path);
 
 			/**
 			 * @brief Get the version of the FFMpeg library.
@@ -73,19 +77,64 @@ namespace Alchemy::Media {
 			 */
 			static const std::string 															Version();
 
-		private:
-			Streams																				m_streams;					///< The list of streams.
+		protected:
+			Media::Streams																		m_streams;					///< The list of streams.
 
 			/**
 			 * @brief Default constructor.
 			 */
 			FFMpeg() noexcept 																	= default;
 
+		private:
+
 			/**
 			 * @brief Parse JSON string.
 			 * @param json The JSON string.
 			 * @return The list of streams.
 			 */
-			static StormByte::Expected<Streams, Exception>										ParseJSon(const std::string& json);
+			static StormByte::Expected<Media::Streams, StreamError>								ParseJSon(const std::string& json);
+
+			/**
+			 * @brief Parse Attachment.
+			 * @param root The JSON value.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseAttachmentJson(const Json::Value& audio_json);
+
+			/**
+			 * @brief Parse Audio.
+			 * @param root The JSON value.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseAudioJson(const Json::Value& audio_json);
+
+			/**
+			 * @brief Parse Image.
+			 * @param root The JSON value.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseImageJson(const Json::Value& audio_json);
+
+			/**
+			 * @brief Parse Video.
+			 * @param root The JSON value.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseVideoJson(const Json::Value& audio_json);
+
+			/**
+			 * @brief Parse Subtitle.
+			 * @param root The JSON value.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseSubtitleJson(const Json::Value& audio_json);
+
+			/**
+			 * @brief Parse tags.
+			 * @param tags The JSON value.
+			 * @param tag_name The name of the tag.
+			 * @return The list of streams.
+			 */
+			static StormByte::Multimedia::Media::Tags											ParseTags(const Json::Value& tags, const std::string& tag_name);
 	};
 }
