@@ -5,17 +5,17 @@ if (WITH_SYSTEM_JSONCPP)
 	message(STATUS "Found JsonCpp: ${jsoncpp_VERSION}")
 else()
 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-	add_library(JsonCpp SHARED
+	add_library(jsoncpp SHARED
 		jsoncpp.cpp
 		json/json.h
 		json/json-forwards.h
 	)
-	add_library(JsonCpp::JsonCpp ALIAS JsonCpp)
-	target_include_directories(JsonCpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+	add_library(JsonCpp::JsonCpp ALIAS jsoncpp)
+	target_include_directories(jsoncpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 	if (WIN32)
-		install(TARGETS JsonCpp
+		install(TARGETS jsoncpp
 			ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 			LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

@@ -104,7 +104,7 @@ jobs:
 
       - name: Copy DLLs
         run: |
-          Copy-Item -Path "${{ github.workspace }}\build\thirdparty\jsoncpp\JsonCpp.dll" -Destination "${{ github.workspace }}\build\test" -Force
+          Copy-Item -Path "${{ github.workspace }}\build\thirdparty\jsoncpp\jsoncpp.dll" -Destination "${{ github.workspace }}\build\test" -Force
           Copy-Item -Path "${{ github.workspace }}\build\thirdparty\StormByte\base\lib\StormByte.dll" -Destination "${{ github.workspace }}\build\test" -Force
           Copy-Item -Path "${{ github.workspace }}\build\thirdparty\StormByte\multimedia\lib\StormByte-Multimedia.dll" -Destination "${{ github.workspace }}\build\test" -Force
           Copy-Item -Path "${{ github.workspace }}\build\thirdparty\StormByte\system\lib\StormByte-System.dll" -Destination "${{ github.workspace }}\build\test" -Force
