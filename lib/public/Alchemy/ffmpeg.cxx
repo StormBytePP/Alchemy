@@ -49,7 +49,6 @@ const std::string FFMpeg::Version() {
 }
 
 StormByte::Expected<Media::Streams, StreamError> FFMpeg::ParseJSon(const std::string& json) {
-	std::cout << "Parsing JSON" << std::endl;
 	Json::Value root;
 	Json::Reader reader;
 	// Sanity checks
@@ -63,11 +62,11 @@ StormByte::Expected<Media::Streams, StreamError> FFMpeg::ParseJSon(const std::st
 		return StormByte::Unexpected<StreamError>("Expected root as Object but got something else");
 	}
 
-	std::cout << "We have data"	<< std::endl;
 	// We have data
 	Media::Streams streams;
 	const Json::Value& streamsArray = root["streams"];
 	for (const auto& item : streamsArray) {
+		std::cout << "Index: " << item["index"].asUInt();
 		const auto& stream_type = item["codec_type"].asString();
 		StormByte::Expected<Media::Stream::PointerType, StreamError> expected_stream;
 		if (stream_type == "attachment") {
@@ -88,12 +87,16 @@ StormByte::Expected<Media::Streams, StreamError> FFMpeg::ParseJSon(const std::st
 		else {
 			return StormByte::Unexpected<StreamError>(std::format("Unknown stream type: {}", stream_type));
 		}
-		if (expected_stream) {
-			expected_stream.value()->Disposition() = ParseTags(item, "disposition");
-			expected_stream.value()->Tags() = ParseTags(item, "tags");
-			streams.push_back(expected_stream.value());
+		if (expected_stream.has_value()) {
+			if (!expected_stream.value()) {
+				std::cerr << "Stream is null" << std::endl;
+			}
+			//expected_stream.value()->Disposition() 	= ParseTags(item, "disposition");
+			//expected_stream.value()->Tags() 		= ParseTags(item, "tags");
+			//streams.push_back(std::move(expected_stream.value()));
 		}
 		else {
+			std::cerr << "Unexpected stream" << std::endl;
 			return StormByte::Unexpected(expected_stream.error());
 		}
 	}
@@ -114,7 +117,7 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseAudioJ
 	if (audio_json.isMember("profile")) 
 		audio_stream->Profile() = audio_json["profile"].asString();
 	if (audio_json.isMember("sample_rate"))
-		audio_stream->SampleRate() = audio_json["sample_rate"].asUInt();
+		audio_stream->SampleRate() = std::stoul(audio_json["sample_rate"].asString());
 	else
 		return StormByte::Unexpected<StreamError>("Missing sample rate");		
 	if (audio_json.isMember("channels"))
@@ -126,7 +129,7 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseAudioJ
 	else
 		return StormByte::Unexpected<StreamError>("Missing channel layout");
 	if (audio_json.isMember("bit_rate"))
-		audio_stream->Bitrate() = audio_json["bit_rate"].asUInt();
+		audio_stream->Bitrate() = std::stoul(audio_json["bit_rate"].asString());
 	else
 		return StormByte::Unexpected<StreamError>("Missing bit rate");
 
@@ -138,11 +141,15 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseImageJ
 }
 
 StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseVideoJson(const Json::Value& video_json) {
-	return nullptr;
+	const auto expected_codec = Media::Registry::CodecInfo(video_json["codec_name"].asString());
+	if (!expected_codec) {
+		return StormByte::Unexpected<StreamError>(std::format("Failed to get codec info for {}", video_json["codec_name"].asString()));
+	}
+	std::shared_ptr<Media::VideoStream> video_stream = std::static_pointer_cast<Media::VideoStream>(Media::Stream::Create(expected_codec.value()->Name()));
 }
 
 StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseSubtitleJson(const Json::Value& subtitle_json) {
-	return nullptr;
+	return StormByte::Unexpected<StreamError>("Not implemented");
 }
 
 StormByte::Multimedia::Media::Tags FFMpeg::ParseTags(const Json::Value& tags, const std::string& tag_name) {
@@ -153,4 +160,13 @@ StormByte::Multimedia::Media::Tags FFMpeg::ParseTags(const Json::Value& tags, co
 		tag_list[tag] = tags[tag_name][tag].asString();
 	
 	return tag_list;
+}
+
+StormByte::Expected<Media::Stream::PointerType, StreamError> CreateStreamJson(const std::string& codec_name) {
+	const auto& expected_codec = Media::Registry::CodecInfo(codec_name);
+	if (expected_codec) {
+		std::cout << "Found codec: " << expected_codec.value()->Name() << std::endl;
+		return Media::Stream::Create(expected_codec.value()->Name());
+	}
+	return Media::Stream::Create(expected_codec.value()->Name());
 }

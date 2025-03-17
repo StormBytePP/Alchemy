@@ -4,8 +4,6 @@
 #include <Alchemy/media/flags/codec.hxx>
 
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 /**
  * @namespace Codec
@@ -21,25 +19,29 @@ namespace Alchemy::Media::Codec {
 	 */
 	class ALCHEMY_PUBLIC Info {
 		public:
+			using PointerType 		= std::shared_ptr<const Info>;		///< Alias for the shared pointer to the codec info.
+			
 			/**
 			 * @brief Constructor.
 			 * @param name The name of the codec.
+			 * @param long_name The long name of the codec.
 			 * @param type The type of the codec.
 			 * @param flags The flags of the codec.
-			 * @param encoders The list of encoders.
 			 * @param decoders The list of decoders.
+			 * @param encoders The list of encoders.
 			 */
-			Info(const Name& name, Type type, const Flags::Codec& flags, const Encoders& encoders = {}, const Decoders& decoders = {});
+			Info(const Name& name, const std::string& long_name, Type type, const Flags::Codec& flags, const Decoders& decoders, const Encoders& encoders);
 
 			/**
 			 * @brief Constructor.
 			 * @param name The name of the codec.
 			 * @param type The type of the codec.
+			 * @param type The type of the codec.
 			 * @param flags The flags of the codec.
-			 * @param encoders The list of encoders.
 			 * @param decoders The list of decoders.
+			 * @param encoders The list of encoders.
 			 */
-			Info(Name&& name, Type&& type, Flags::Codec&& flags, Encoders&& encoders = {}, Decoders&& decoders = {});
+			Info(Name&& name, std::string&& long_name, Type&& type, Flags::Codec&& flags, Decoders&& decoders, Encoders&& encoders);
 
 			/**
 			 * @brief Copy constructor.
@@ -79,6 +81,12 @@ namespace Alchemy::Media::Codec {
 			const Codec::Name&									Name() const;
 
 			/**
+			 * @brief Retrieves the long name of the codec.
+			 * @return The long name of the codec.
+			 */
+			const std::string&									LongName() const;
+
+			/**
 			 * @brief Retrieves the type of the codec.
 			 * @return The type of the codec.
 			 */
@@ -91,19 +99,20 @@ namespace Alchemy::Media::Codec {
 			const Flags::Codec& 								Flags() const;
 
 			/**
-			 * @brief Retrieves the list of encoders.
-			 * @return The list of encoders.
-			 */
-			const Media::Encoders& 								Encoders() const;
-
-			/**
 			 * @brief Retrieves the list of decoders.
 			 * @return The list of decoders.
 			 */
 			const Media::Decoders& 								Decoders() const;
 
+			/**
+			 * @brief Retrieves the list of encoders.
+			 * @return The list of encoders.
+			 */
+			const Media::Encoders& 								Encoders() const;
+
 		private:
 			Codec::Name 										m_name;			///< Name of the codec
+			std::string											m_long_name;	///< Long name of the codec.
 			Codec::Type 										m_type;			///< Type of the codec.
 			Flags::Codec 										m_flags;		///< Flags of the codec.
 			Media::Encoders 									m_encoders;		///< List of encoders.

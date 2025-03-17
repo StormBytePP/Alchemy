@@ -136,5 +136,12 @@ namespace Alchemy {
 			 * @return The list of streams.
 			 */
 			static StormByte::Multimedia::Media::Tags											ParseTags(const Json::Value& tags, const std::string& tag_name);
+
+			/**
+			 * @brief Create Stream.
+			 * @param codec_name The name of the codec.
+			 * @return The list of streams.
+			 */
+			static StormByte::Expected<Media::Stream::PointerType, StreamError>					CreateStreamJson(const std::string& codec_name);
 	};
 }
