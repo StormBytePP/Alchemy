@@ -24,7 +24,7 @@ namespace Alchemy::Media {
 		 * @param codec The codec enum value.
 		 * @return A reference to the CodecInfo struct for the requested codec.
 		 */
-		static StormByte::Expected<Codec::Info::PointerType, StormByte::Multimedia::CodecNotFound> 	CodecInfo(const Codec::Name& codec);
+		static StormByte::Expected<Codec::Info::PointerType, StormByte::Multimedia::CodecNotFound> 	CodecInfo(const Codec::ID& codec);
 
 		/**
 		 * @brief Retrieves detailed information about a codec by name.
@@ -35,6 +35,7 @@ namespace Alchemy::Media {
 
 		private:
 			static const std::vector<Codec::Info::PointerType>										c_codec_registry; 	///< The codec registry.
+			static const std::unordered_map<Codec::ID, Codec::Info::PointerType> 					c_codec_id_map;		///< The codec name map.
 			static const std::unordered_map<std::string, Codec::Info::PointerType> 					c_codec_name_map;	///< The codec name map.
 			
 	};

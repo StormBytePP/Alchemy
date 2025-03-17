@@ -2,14 +2,22 @@
 
 using namespace Alchemy::Media;
 
-Codec::Info::Info(const Codec::Name& name, const std::string& long_name, Codec::Type type, const Flags::Codec& flags, const Media::Encoders& encoders, const Media::Decoders& decoders):
-m_name(name), m_long_name(long_name), m_type(type), m_flags(flags), m_encoders(encoders), m_decoders(decoders) {}
+Codec::Info::Info(const Codec::ID& id, const std::string& name, const std::string& long_name, Codec::Type type, const Flags::Codec& flags, const Media::Encoders& encoders, const Media::Decoders& decoders):
+m_id(id), m_name(name), m_long_name(long_name), m_type(type), m_flags(flags), m_encoders(encoders), m_decoders(decoders) {}
 
-Codec::Info::Info(Codec::Name&& name, std::string&& long_name, Codec::Type&& type, Flags::Codec&& flags, Media::Encoders&& encoders, Media::Decoders&& decoders):
-m_name(std::move(name)), m_long_name(std::move(long_name)), m_type(std::move(type)), m_flags(std::move(flags)), m_encoders(std::move(encoders)), m_decoders(std::move(decoders)) {}
+Codec::Info::Info(Codec::ID&& id, std::string&& name, std::string&& long_name, Codec::Type&& type, Flags::Codec&& flags, Media::Encoders&& encoders, Media::Decoders&& decoders):
+m_id(std::move(id)), m_name(std::move(name)), m_long_name(std::move(long_name)), m_type(std::move(type)), m_flags(std::move(flags)), m_encoders(std::move(encoders)), m_decoders(std::move(decoders)) {}
 
-const Codec::Name& Codec::Info::Name() const {
+const Codec::ID& Codec::Info::ID() const {
+	return m_id;
+}
+
+const std::string& Codec::Info::Name() const {
 	return m_name;
+}
+
+const std::string& Codec::Info::LongName() const {
+	return m_long_name;
 }
 
 Codec::Type Codec::Info::Type() const {

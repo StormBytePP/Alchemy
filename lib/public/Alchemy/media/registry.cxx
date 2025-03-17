@@ -31,8 +31,8 @@ const std::vector<Codec::Info::PointerType> Registry::c_codec_registry = []() ->
 			std::string name = match[2];
 			std::string long_name = match[3];
 
-			auto expected_codec_name = StormByte::Multimedia::Media::Registry::CodecInfo(name);
-			if (!expected_codec_name)
+			auto expected_codec_info = StormByte::Multimedia::Media::Registry::CodecInfo(name);
+			if (!expected_codec_info)
 				continue;
 			
 			Decoders decoders;
@@ -45,9 +45,10 @@ const std::vector<Codec::Info::PointerType> Registry::c_codec_registry = []() ->
 			}
 			
 			Codec::Info codec_info {
-				expected_codec_name.value()->Name(),
+				expected_codec_info.value()->ID(),
+				expected_codec_info.value()->Name(),
 				std::move(long_name),
-				expected_codec_name.value()->Type(),
+				expected_codec_info.value()->Type(),
 				std::move(flags),
 				std::move(decoders),
 				std::move(encoders)
@@ -59,22 +60,28 @@ const std::vector<Codec::Info::PointerType> Registry::c_codec_registry = []() ->
 	return codec_registry;
 }();
 
+const std::unordered_map<Codec::ID, Codec::Info::PointerType> Registry::c_codec_id_map = []() -> std::unordered_map<Codec::ID, Codec::Info::PointerType> {
+	std::unordered_map<Codec::ID, Codec::Info::PointerType> codec_id_map;
+	for (auto& codec: c_codec_registry) {
+		codec_id_map[codec->ID()] = codec;
+	}
+	return codec_id_map;
+}();
+
 const std::unordered_map<std::string, Codec::Info::PointerType> Registry::c_codec_name_map = []() -> std::unordered_map<std::string, Codec::Info::PointerType> {
 	std::unordered_map<std::string, Codec::Info::PointerType> codec_name_map;
 	for (auto& codec: c_codec_registry) {
-		codec_name_map[StormByte::Util::String::ToLower(StormByte::Multimedia::Media::Registry::CodecInfo(codec->Name())->NameToString())] = codec;
+		codec_name_map[StormByte::Util::String::ToLower(StormByte::Multimedia::Media::Registry::CodecInfo(codec->ID())->Name())] = codec;
 	}
 	return codec_name_map;
 }();
 
-StormByte::Expected<std::shared_ptr<const Codec::Info>, StormByte::Multimedia::CodecNotFound> Registry::CodecInfo(const Codec::Name& codec) {
-	const auto& info = std::ranges::find_if(c_codec_registry, [&codec](const auto& c) {
-		return c->Name() == codec;
-	});
-	if (info != c_codec_registry.end())
-		return *info;
+StormByte::Expected<std::shared_ptr<const Codec::Info>, StormByte::Multimedia::CodecNotFound> Registry::CodecInfo(const Codec::ID& codec) {
+	const auto& info = c_codec_id_map.find(codec);
+	if (info != c_codec_id_map.end())
+		return info->second;
 	else
-		return StormByte::Unexpected<StormByte::Multimedia::CodecNotFound>(StormByte::Multimedia::Media::Registry::CodecInfo(codec)->NameToString());
+		return StormByte::Unexpected<StormByte::Multimedia::CodecNotFound>(StormByte::Multimedia::Media::Registry::CodecInfo(codec)->Name());
 }
 
 StormByte::Expected<std::shared_ptr<const Codec::Info>, StormByte::Multimedia::CodecNotFound> Registry::CodecInfo(const std::string& name) {

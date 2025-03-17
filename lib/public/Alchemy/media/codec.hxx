@@ -10,7 +10,7 @@
  * @brief The namespace for all multimedia media codec information.
  */
 namespace Alchemy::Media::Codec {
-	using Name = StormByte::Multimedia::Media::Codec::Name;	///< Alias for the codec name.
+	using ID = StormByte::Multimedia::Media::Codec::ID;	///< Alias for the codec name.
 	using Type = StormByte::Multimedia::Media::Type;		///< Alias for the codec type.
 
 	/**
@@ -23,6 +23,7 @@ namespace Alchemy::Media::Codec {
 			
 			/**
 			 * @brief Constructor.
+			 * @param id The ID of the codec.
 			 * @param name The name of the codec.
 			 * @param long_name The long name of the codec.
 			 * @param type The type of the codec.
@@ -30,10 +31,11 @@ namespace Alchemy::Media::Codec {
 			 * @param decoders The list of decoders.
 			 * @param encoders The list of encoders.
 			 */
-			Info(const Name& name, const std::string& long_name, Type type, const Flags::Codec& flags, const Decoders& decoders, const Encoders& encoders);
+			Info(const ID& id, const std::string& name, const std::string& long_name, Type type, const Flags::Codec& flags, const Decoders& decoders, const Encoders& encoders);
 
 			/**
 			 * @brief Constructor.
+			 * @param id The ID of the codec.
 			 * @param name The name of the codec.
 			 * @param type The type of the codec.
 			 * @param type The type of the codec.
@@ -41,7 +43,7 @@ namespace Alchemy::Media::Codec {
 			 * @param decoders The list of decoders.
 			 * @param encoders The list of encoders.
 			 */
-			Info(Name&& name, std::string&& long_name, Type&& type, Flags::Codec&& flags, Decoders&& decoders, Encoders&& encoders);
+			Info(ID&& id, std::string&& name, std::string&& long_name, Type&& type, Flags::Codec&& flags, Decoders&& decoders, Encoders&& encoders);
 
 			/**
 			 * @brief Copy constructor.
@@ -78,7 +80,13 @@ namespace Alchemy::Media::Codec {
 			 * @brief Retrieves the name of the codec.
 			 * @return The name of the codec.
 			 */
-			const Codec::Name&									Name() const;
+			const Codec::ID&									ID() const;
+
+			/**
+			 * @brief Retrieves the long name of the codec.
+			 * @return The long name of the codec.
+			 */
+			const std::string&									Name() const;
 
 			/**
 			 * @brief Retrieves the long name of the codec.
@@ -111,7 +119,8 @@ namespace Alchemy::Media::Codec {
 			const Media::Encoders& 								Encoders() const;
 
 		private:
-			Codec::Name 										m_name;			///< Name of the codec
+			Codec::ID 											m_id;			///< Name of the codec
+			std::string											m_name;			///< Long name of the codec.
 			std::string											m_long_name;	///< Long name of the codec.
 			Codec::Type 										m_type;			///< Type of the codec.
 			Flags::Codec 										m_flags;		///< Flags of the codec.
