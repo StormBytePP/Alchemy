@@ -66,7 +66,7 @@ StormByte::Expected<Media::Streams, StreamError> FFMpeg::ParseJSon(const std::st
 	Media::Streams streams;
 	const Json::Value& streamsArray = root["streams"];
 	for (const auto& item : streamsArray) {
-		std::cout << "Index: " << item["index"].asUInt();
+		std::cout << "Index: " << item["index"].asUInt() << std::endl;
 		const auto& stream_type = item["codec_type"].asString();
 		StormByte::Expected<Media::Stream::PointerType, StreamError> expected_stream;
 		if (stream_type == "attachment") {
@@ -91,9 +91,9 @@ StormByte::Expected<Media::Streams, StreamError> FFMpeg::ParseJSon(const std::st
 			if (!expected_stream.value()) {
 				std::cerr << "Stream is null" << std::endl;
 			}
-			//expected_stream.value()->Disposition() 	= ParseTags(item, "disposition");
-			//expected_stream.value()->Tags() 		= ParseTags(item, "tags");
-			//streams.push_back(std::move(expected_stream.value()));
+			expected_stream.value()->Disposition() 	= ParseTags(item, "disposition");
+			expected_stream.value()->Tags() 		= ParseTags(item, "tags");
+			streams.push_back(std::move(expected_stream.value()));
 		}
 		else {
 			std::cerr << "Unexpected stream" << std::endl;
@@ -112,7 +112,7 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseAudioJ
 	if (!expected_codec) {
 		return StormByte::Unexpected<StreamError>(std::format("Failed to get codec info for {}", audio_json["codec_name"].asString()));
 	}
-	std::shared_ptr<Media::AudioStream> audio_stream = std::static_pointer_cast<Media::AudioStream>(Media::Stream::Create(expected_codec.value()->ID()));
+	std::shared_ptr<Media::AudioStream> audio_stream = std::static_pointer_cast<Media::AudioStream>(StormByte::Multimedia::Stream::Create(expected_codec.value()->ID()));
 
 	if (audio_json.isMember("profile")) 
 		audio_stream->Profile() = audio_json["profile"].asString();
@@ -145,7 +145,11 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseVideoJ
 	if (!expected_codec) {
 		return StormByte::Unexpected<StreamError>(std::format("Failed to get codec info for {}", video_json["codec_name"].asString()));
 	}
-	std::shared_ptr<Media::VideoStream> video_stream = std::static_pointer_cast<Media::VideoStream>(Media::Stream::Create(expected_codec.value()->ID()));
+	std::shared_ptr<Media::VideoStream> video_stream = std::static_pointer_cast<Media::VideoStream>(StormByte::Multimedia::Stream::Create(expected_codec.value()->ID()));
+
+	
+
+	return video_stream;
 }
 
 StormByte::Expected<Media::Stream::PointerType, StreamError> FFMpeg::ParseSubtitleJson(const Json::Value& subtitle_json) {
