@@ -3,10 +3,13 @@
 
 using namespace Alchemy;
 
-const std::filesystem::path FFMpeg::c_path = []() -> std::filesystem::path {
-	#ifdef WINDOWS
-	return StormByte::Util::System::CurrentPath() / @FFMPEG_EXECUTABLE@;
-	#else
-	return "@FFMPEG_EXECUTABLE@";
-	#endif
-}();
+const std::filesystem::path& FFMpeg::Executable() noexcept {
+	static const std::filesystem::path c_path = []() -> std::filesystem::path {
+		#ifdef WINDOWS
+		return StormByte::Util::System::CurrentPath() / @FFMPEG_EXECUTABLE@;
+		#else
+		return "@FFMPEG_EXECUTABLE@";
+		#endif
+	}();
+	return c_path;
+}

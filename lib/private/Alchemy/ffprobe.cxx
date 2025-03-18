@@ -214,7 +214,7 @@ const Json::Value FFProbe::Execute(std::vector<std::string>&& arguments, const s
     }
     const std::string params = oss.str();
 
-	StormByte::System::Process process(c_path, std::move(arguments));
+	StormByte::System::Process process(Executable(), std::move(arguments));
 	std::string result;
 	std::string err;
 	process >> result;

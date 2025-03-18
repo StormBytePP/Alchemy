@@ -61,7 +61,7 @@ namespace Alchemy {
 			 * @brief Get the path to the FFMpeg executable.
 			 * @return The path to the FFMpeg executable.
 			 */
-			static const std::filesystem::path& 												Executable() noexcept;
+			static const std::filesystem::path& 												Executable() noexcept; // Implemented by cmake generated file
 
 			/**
 			 * @brief Processes the file and creates a FFMpeg object.
@@ -69,8 +69,6 @@ namespace Alchemy {
 			 * @return The FFMpeg object.
 			 */
 			static StormByte::Expected<FFMpeg, StreamError> 									FromFile(const std::filesystem::path& path);
-
-			static bool 																		IsHDRPlus(const std::filesystem::path& path);
 
 			/**
 			 * @brief Gets the streams
@@ -99,7 +97,6 @@ namespace Alchemy {
 		protected:
 			std::filesystem::path																m_path;						///< The path to the file.
 			Media::Streams																		m_streams;					///< The list of streams.
-			static const std::filesystem::path 													c_path;						///< The path to the FFMpeg executable.
 
 			/**
 			 * @brief Default constructor.

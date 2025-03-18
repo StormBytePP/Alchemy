@@ -3,10 +3,13 @@
 
 using namespace Alchemy;
 
-const std::filesystem::path FFProbe::c_path = []() -> std::filesystem::path {
-	#ifdef WINDOWS
-	return StormByte::Util::System::CurrentPath() / @FFPROBE_EXECUTABLE@;
-	#else
-	return "@FFPROBE_EXECUTABLE@";
-	#endif
-}();
+const std::filesystem::path& FFProbe::Executable() noexcept {
+	static const std::filesystem::path c_path = []() -> std::filesystem::path {
+		#ifdef WINDOWS
+		return StormByte::Util::System::CurrentPath() / @FFPROBE_EXECUTABLE@;
+		#else
+		return "@FFPROBE_EXECUTABLE@";
+		#endif
+	}();
+	return c_path;
+}
