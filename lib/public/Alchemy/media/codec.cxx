@@ -2,36 +2,32 @@
 
 using namespace Alchemy::Media;
 
-Codec::Info::Info(const Codec::ID& id, const std::string& name, const std::string& long_name, Codec::Type type, const Flags::Codec& flags, const Media::Encoders& encoders, const Media::Decoders& decoders):
-m_id(id), m_name(name), m_long_name(long_name), m_type(type), m_flags(flags), m_encoders(encoders), m_decoders(decoders) {}
+Codec::Codec(const std::string& name, const std::string& long_name, const Flags::Codec& flags, const Media::Decoders& decoders, const Media::Encoders& encoders):
+StormByte::Multimedia::Codec(name, long_name, flags), m_decoders(decoders), m_encoders(encoders) {}
 
-Codec::Info::Info(Codec::ID&& id, std::string&& name, std::string&& long_name, Codec::Type&& type, Flags::Codec&& flags, Media::Encoders&& encoders, Media::Decoders&& decoders):
-m_id(std::move(id)), m_name(std::move(name)), m_long_name(std::move(long_name)), m_type(std::move(type)), m_flags(std::move(flags)), m_encoders(std::move(encoders)), m_decoders(std::move(decoders)) {}
+Codec::Codec(std::string&& name, std::string&& long_name, Flags::Codec&& flags, Media::Decoders&& decoders, Media::Encoders&& encoders):
+StormByte::Multimedia::Codec(std::move(name), std::move(long_name), std::move(flags)), m_decoders(std::move(decoders)), m_encoders(std::move(encoders)) {}
 
-const Codec::ID& Codec::Info::ID() const {
-	return m_id;
-}
-
-const std::string& Codec::Info::Name() const {
-	return m_name;
-}
-
-const std::string& Codec::Info::LongName() const {
-	return m_long_name;
-}
-
-Codec::Type Codec::Info::Type() const {
-	return m_type;
-}
-
-const Flags::Codec& Codec::Info::Flags() const {
-	return m_flags;
-}
-
-const Alchemy::Media::Decoders& Codec::Info::Decoders() const {
+Alchemy::Media::Decoders& Codec::Decoders() noexcept {
 	return m_decoders;
 }
 
-const Alchemy::Media::Encoders& Codec::Info::Encoders() const {
+const Alchemy::Media::Decoders& Codec::Decoders() const noexcept {
+	return m_decoders;
+}
+
+Alchemy::Media::Encoders& Codec::Encoders() noexcept {
 	return m_encoders;
+}
+
+const Alchemy::Media::Encoders& Codec::Encoders() const noexcept {
+	return m_encoders;
+}
+
+const Flags::Codec* Codec::Flags() const noexcept {
+	return std::static_pointer_cast<const Flags::Codec>(m_flags).get();
+}
+
+StormByte::Multimedia::Media::Type Codec::Type() const noexcept {
+	return Flags()->Type();
 }

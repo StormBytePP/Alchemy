@@ -1,0 +1,12 @@
+#include <Alchemy/ffprobe.hxx>
+#include <StormByte/util/system.hxx>
+
+using namespace Alchemy;
+
+const std::filesystem::path FFProbe::c_path = []() -> std::filesystem::path {
+	#ifdef WINDOWS
+	return StormByte::Util::System::CurrentPath() / @FFPROBE_EXECUTABLE@;
+	#else
+	return "@FFPROBE_EXECUTABLE@";
+	#endif
+}();

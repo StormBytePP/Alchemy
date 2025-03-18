@@ -2,129 +2,113 @@
 
 #include <Alchemy/media/alias.hxx>
 #include <Alchemy/media/flags/codec.hxx>
+#include <StormByte/multimedia/codec.hxx>
 
-#include <string>
+#include <memory>
 
 /**
- * @namespace Codec
- * @brief The namespace for all multimedia media codec information.
+ * @namespace Media
+ * @brief All the media related classes and functions.
  */
-namespace Alchemy::Media::Codec {
-	using ID = StormByte::Multimedia::Media::Codec::ID;	///< Alias for the codec name.
-	using Type = StormByte::Multimedia::Media::Type;		///< Alias for the codec type.
-
+namespace Alchemy::Media {
 	/**
-	 * @struct CodecInfo
-	 * @brief Holds detailed information about a codec.
+	 * @class Codec
+	 * @brief The codec class.
 	 */
-	class ALCHEMY_PUBLIC Info {
+	class ALCHEMY_PUBLIC Codec: public StormByte::Multimedia::Codec {
 		public:
-			using PointerType 		= std::shared_ptr<const Info>;		///< Alias for the shared pointer to the codec info.
-			
-			/**
-			 * @brief Constructor.
-			 * @param id The ID of the codec.
-			 * @param name The name of the codec.
-			 * @param long_name The long name of the codec.
-			 * @param type The type of the codec.
-			 * @param flags The flags of the codec.
-			 * @param decoders The list of decoders.
-			 * @param encoders The list of encoders.
-			 */
-			Info(const ID& id, const std::string& name, const std::string& long_name, Type type, const Flags::Codec& flags, const Decoders& decoders, const Encoders& encoders);
+			using PointerType 		= std::shared_ptr<const Codec>;		///< The pointer type.
 
 			/**
 			 * @brief Constructor.
-			 * @param id The ID of the codec.
-			 * @param name The name of the codec.
-			 * @param type The type of the codec.
-			 * @param type The type of the codec.
-			 * @param flags The flags of the codec.
-			 * @param decoders The list of decoders.
-			 * @param encoders The list of encoders.
+			 * @param id The codec ID.
+			 * @param name The codec name.
+			 * @param long_name The codec long name.
+			 * @param flags The codec flags.
+			 * @param decoders The decoders.
+			 * @param encoders The encoders.
 			 */
-			Info(ID&& id, std::string&& name, std::string&& long_name, Type&& type, Flags::Codec&& flags, Decoders&& decoders, Encoders&& encoders);
+			Codec(const std::string& name, const std::string& long_name, const Flags::Codec& flags, const Decoders& decoders, const Encoders& encoders);
+
+			/**
+			 * @brief Constructor.
+			 * @param name The codec name.
+			 * @param long_name The codec long name.
+			 * @param flags The codec flags.
+			 * @param decoders The decoders.
+			 * @param encoders The encoders.
+			 */
+			Codec(std::string&& name, std::string&& long_name, Flags::Codec&& flags, Decoders&& decoders, Encoders&& encoders);
 
 			/**
 			 * @brief Copy constructor.
-			 * @param other The Info object to copy.
+			 * @param other The Codec object to copy.
 			 */
-			Info(const Info& other) 							= default;
+			Codec(const Codec& other)											= default;
 
 			/**
 			 * @brief Move constructor.
-			 * @param other The Info object to move.
+			 * @param other The Codec object to move.
 			 */
-			Info(Info&& other) noexcept 						= default;
+			Codec(Codec&& other) noexcept										= default;
 
 			/**
 			 * @brief Copy assignment operator.
-			 * @param other The Info object to copy.
+			 * @param other The Codec object to copy.
 			 * @return A reference to this object.
 			 */
-			Info& operator=(const Info& other)					= default;
+			Codec& operator=(const Codec& other)								= default;
 
 			/**
 			 * @brief Move assignment operator.
-			 * @param other The Info object to move.
+			 * @param other The Codec object to move.
 			 * @return A reference to this object.
 			 */
-			Info& operator=(Info&& other) noexcept 				= default;
+			Codec& operator=(Codec&& other) noexcept							= default;
 
 			/**
-			 * @brief Destructor.
+			 * @brief Default destructor.
 			 */
-			~Info() noexcept 									= default;
+			~Codec() noexcept override 											= default;
 
 			/**
-			 * @brief Retrieves the name of the codec.
-			 * @return The name of the codec.
+			 * @brief Gets the codec flags.
+			 * @return The codec flags.
 			 */
-			const Codec::ID&									ID() const;
+			const Flags::Codec* 												Flags() const noexcept override;
 
 			/**
-			 * @brief Retrieves the long name of the codec.
-			 * @return The long name of the codec.
+			 * @brief Gets the codec type
+			 * @return Gets type
 			 */
-			const std::string&									Name() const;
+			StormByte::Multimedia::Media::Type 									Type() const noexcept override;
 
 			/**
-			 * @brief Retrieves the long name of the codec.
-			 * @return The long name of the codec.
+			 * @brief Gets the decoders.
+			 * @return The decoders.
 			 */
-			const std::string&									LongName() const;
+			Media::Decoders& 													Decoders() noexcept;
 
 			/**
-			 * @brief Retrieves the type of the codec.
-			 * @return The type of the codec.
+			 * @brief Gets the decoders.
+			 * @return The decoders.
 			 */
-			Codec::Type 										Type() const;
+			const Media::Decoders& 												Decoders() const noexcept;
 
 			/**
-			 * @brief Retrieves the flags of the codec.
-			 * @return The flags of the codec.
+			 * @brief Gets the encoders.
+			 * @return The encoders.
 			 */
-			const Flags::Codec& 								Flags() const;
+			Media::Encoders& 													Encoders() noexcept;
 
 			/**
-			 * @brief Retrieves the list of decoders.
-			 * @return The list of decoders.
+			 * @brief Gets the encoders.
+			 * @return The encoders.
 			 */
-			const Media::Decoders& 								Decoders() const;
-
-			/**
-			 * @brief Retrieves the list of encoders.
-			 * @return The list of encoders.
-			 */
-			const Media::Encoders& 								Encoders() const;
+			const Media::Encoders& 												Encoders() const noexcept;
 
 		private:
-			Codec::ID 											m_id;			///< Name of the codec
-			std::string											m_name;			///< Long name of the codec.
-			std::string											m_long_name;	///< Long name of the codec.
-			Codec::Type 										m_type;			///< Type of the codec.
-			Flags::Codec 										m_flags;		///< Flags of the codec.
-			Media::Encoders 									m_encoders;		///< List of encoders.
-			Media::Decoders 									m_decoders;		///< List of decoders.
+			Media::Decoders m_decoders;											///< The decoders.
+			Media::Encoders m_encoders;											///< The encoders.
 	};
 }

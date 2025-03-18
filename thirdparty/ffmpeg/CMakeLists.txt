@@ -39,3 +39,8 @@ configure_file(
     ${CMAKE_BINARY_DIR}/ffmpeg_info.cxx
     @ONLY
 )
+configure_file(
+    ${CMAKE_SOURCE_DIR}/lib/private/ffprobe_info.cxx.in
+    ${CMAKE_BINARY_DIR}/ffprobe_info.cxx
+    @ONLY
+)

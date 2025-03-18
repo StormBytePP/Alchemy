@@ -3,7 +3,7 @@
 #include <Alchemy/exception.hxx>
 #include <Alchemy/media/alias.hxx>
 #include <StormByte/alias.hxx>
-#include <StormByte/multimedia/media/tags.hxx>
+#include <StormByte/multimedia/media/property/tags.hxx>
 
 #include <filesystem>
 #include <memory>
@@ -19,7 +19,12 @@ namespace Json { class Value; }
  * @brief All the media related classes and functions.
  */
 namespace Alchemy {
+	/**
+	 * @class FFMpeg
+	 * @brief The FFMpeg class.
+	 */
 	class ALCHEMY_PUBLIC FFMpeg {
+		friend class FFProbe;
 		public:
 			/**
 			 * @brief Copy constructor.
@@ -53,23 +58,35 @@ namespace Alchemy {
 			virtual ~FFMpeg() noexcept 															= default;
 
 			/**
-			 * @brief Path to FFMpeg executable
+			 * @brief Get the path to the FFMpeg executable.
 			 * @return The path to the FFMpeg executable.
 			 */
-			static const std::filesystem::path													FFMpegPath();
+			static const std::filesystem::path& 												Executable() noexcept;
 
 			/**
-			 * @brief Path to FFProbe executable
-			 * @return The path to the FFProbe executable.
-			 */
-			static const std::filesystem::path													FFProbePath();
-			
-			/**
-			 * @brief Get the list of streams.
+			 * @brief Processes the file and creates a FFMpeg object.
 			 * @param path The path to the file.
-¡			 * @return The list of streams.
+			 * @return The FFMpeg object.
 			 */
-			static StormByte::Expected<FFMpeg, StreamError>										FromFile(const std::filesystem::path& path);
+			static StormByte::Expected<FFMpeg, StreamError> 									FromFile(const std::filesystem::path& path);
+
+			/**
+			 * @brief Gets the streams
+			 * @return The streams.
+			 */
+			Media::Streams& 																	Streams() noexcept;
+
+			/**
+			 * @brief Gets the streams
+			 * @return The streams.
+			 */
+			const Media::Streams& 																Streams() const noexcept;
+
+			/**
+			 * @brief Get the path to the file.
+			 * @return The path to the file.
+			 */
+			const std::filesystem::path& 														Path() const noexcept;
 
 			/**
 			 * @brief Get the version of the FFMpeg library.
@@ -78,63 +95,13 @@ namespace Alchemy {
 			static const std::string 															Version();
 
 		protected:
+			std::filesystem::path																m_path;						///< The path to the file.
 			Media::Streams																		m_streams;					///< The list of streams.
+			static const std::filesystem::path 													c_path;						///< The path to the FFMpeg executable.
 
 			/**
 			 * @brief Default constructor.
 			 */
-			FFMpeg() noexcept 																	= default;
-
-		private:
-
-			/**
-			 * @brief Parse JSON string.
-			 * @param json The JSON string.
-			 * @return The list of streams.
-			 */
-			static StormByte::Expected<Media::Streams, StreamError>								ParseJSon(const std::string& json);
-
-			/**
-			 * @brief Parse Attachment.
-			 * @param root The JSON value.
-			 * @return The list of streams.
-			 */
-			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseAttachmentJson(const Json::Value& audio_json);
-
-			/**
-			 * @brief Parse Audio.
-			 * @param root The JSON value.
-			 * @return The list of streams.
-			 */
-			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseAudioJson(const Json::Value& audio_json);
-
-			/**
-			 * @brief Parse Image.
-			 * @param root The JSON value.
-			 * @return The list of streams.
-			 */
-			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseImageJson(const Json::Value& audio_json);
-
-			/**
-			 * @brief Parse Video.
-			 * @param root The JSON value.
-			 * @return The list of streams.
-			 */
-			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseVideoJson(const Json::Value& audio_json);
-
-			/**
-			 * @brief Parse Subtitle.
-			 * @param root The JSON value.
-			 * @return The list of streams.
-			 */
-			static StormByte::Expected<Media::Stream::PointerType, StreamError>					ParseSubtitleJson(const Json::Value& audio_json);
-
-			/**
-			 * @brief Parse tags.
-			 * @param tags The JSON value.
-			 * @param tag_name The name of the tag.
-			 * @return The list of streams.
-			 */
-			static StormByte::Multimedia::Media::Tags											ParseTags(const Json::Value& tags, const std::string& tag_name);
+			FFMpeg(const std::filesystem::path& path) noexcept;
 	};
 }

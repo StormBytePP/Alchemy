@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Alchemy/exception.hxx>
-#include <Alchemy/media/flags/base.hxx>
-#include <StormByte/alias.hxx>
+#include <Alchemy/visibility.h>
+#include <StormByte/multimedia/media/property/flags.hxx>
 #include <StormByte/multimedia/media/type.hxx>
 
 #include <array>
@@ -12,10 +11,12 @@
  * @brief The namespace for media flags.
  */
 namespace Alchemy::Media::Flags {
+	using Base = StormByte::Multimedia::Media::Property::Flags; ///< The base class.
+	
 	/**
 	 * @brief The flags for the codec.
 	 */
-	class ALCHEMY_PUBLIC Codec final: public Base<5> {
+	class ALCHEMY_PUBLIC Codec final: public Base {
 		public:
 			/**
 			 * @brief Constructor.
@@ -82,6 +83,19 @@ namespace Alchemy::Media::Flags {
 			 * @brief Gets the codec type.
 			 * @return The codec type.
 			 */
-			StormByte::Expected<StormByte::Multimedia::Media::Type, Exception>	Type() const;
+			StormByte::Multimedia::Media::Type									Type() const;
+
+			/**
+			 * @brief Creates a copy of the object.
+			 * @return A pointer to the copy of the object.
+			 */
+			Base::PointerType													Clone() const override;
+
+			/**
+			 * @brief Moves the object.
+			 * @return A pointer to the moved object.
+			 */
+			Base::PointerType													Move() override;
+
 	};	
 }

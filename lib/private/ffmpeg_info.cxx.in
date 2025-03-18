@@ -3,21 +3,10 @@
 
 using namespace Alchemy;
 
-// Those need to be const char* because they are used in the early initialization
-// of another static methods which will fail if we return std::filesystem::path here
-const std::filesystem::path FFMpeg::FFMpegPath() {
+const std::filesystem::path FFMpeg::c_path = []() -> std::filesystem::path {
 	#ifdef WINDOWS
-	static const std::filesystem::path _ffmpeg_path = StormByte::Util::System::CurrentPath() / @FFMPEG_EXECUTABLE@;
-	return _ffmpeg_path.string().c_str();
+	return StormByte::Util::System::CurrentPath() / @FFMPEG_EXECUTABLE@;
 	#else
 	return "@FFMPEG_EXECUTABLE@";
 	#endif
-};
-
-const std::filesystem::path FFMpeg::FFProbePath() {
-	#ifdef WINDOWS
-	return StormByte::Util::System::CurrentPath() / @FFPROBE_EXECUTABLE@;
-	#else
-	return "@FFPROBE_EXECUTABLE@";
-	#endif
-};
+}();

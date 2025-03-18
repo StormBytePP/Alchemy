@@ -45,22 +45,31 @@ int test_non_existing_file() {
 	RETURN_TEST("test_non_existing_file", result);
 }
 
-int test_streams() {
+int test_HDR() {
 	int result = 0;
 	try {
 		const std::filesystem::path path = CurrentFileDirectory / "files" / "testHDR.mkv";
 		auto ffmpeg = FFMpeg::FromFile(path);
+		if (!ffmpeg) {
+			std::cerr << "ffmpeg not created because of: " << ffmpeg.error()->what() << std::endl;
+			result++;
+		}
+		else {
+			auto video_stream = std::static_pointer_cast<Media::VideoStream>(ffmpeg.value().Streams()[0]);
+			bool hdr_status = video_stream->Color()->IsHDR10();
+			ASSERT_TRUE("test_HDR", hdr_status);
+		}
 	}
 	catch (const StormByte::Exception& ex) {
-		std::cerr << "ERROR: " << ex.what() << std::endl;
+		std::cerr << "No exception should be thrown but got one: " << ex.what() << std::endl;
 		result++;
 	}
 	catch (const std::exception& ex) {
-		std::cerr << "ERROR: Unknown exception: " << ex.what() << std::endl;
+		std::cerr << "No exception should be thrown but got one: " << ex.what() << std::endl;
 		result++;
 	}
 
-	RETURN_TEST("test_streams", result);
+	RETURN_TEST("test_HDR", result);
 }
 
 int main() {
@@ -68,7 +77,7 @@ int main() {
 	try {
 		counter += version_test();
 		counter += test_non_existing_file();
-		counter += test_streams();
+		counter += test_HDR();
 	}
 	catch (...) {
 		std::cerr << "ERROR: Unknown exception" << std::endl;
