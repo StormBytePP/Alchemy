@@ -35,12 +35,12 @@ mark_as_advanced(FFMPEG_EXECUTABLE)
 mark_as_advanced(FFPROBE_EXECUTABLE)
 
 configure_file(
-    ${CMAKE_SOURCE_DIR}/lib/private/ffmpeg_info.cxx.in
-    ${CMAKE_BINARY_DIR}/ffmpeg_info.cxx
+    ${CMAKE_SOURCE_DIR}/lib/private/ffmpeg.cxx.in
+    ${CMAKE_BINARY_DIR}/ffmpeg.cxx
     @ONLY
 )
 configure_file(
-    ${CMAKE_SOURCE_DIR}/lib/private/ffprobe_info.cxx.in
-    ${CMAKE_BINARY_DIR}/ffprobe_info.cxx
+    ${CMAKE_SOURCE_DIR}/lib/private/ffprobe.cxx.in
+    ${CMAKE_BINARY_DIR}/ffprobe.cxx
     @ONLY
 )

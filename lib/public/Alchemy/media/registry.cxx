@@ -1,5 +1,6 @@
-#include <Alchemy/media/registry.hxx>
 #include <Alchemy/ffmpeg.hxx>
+#include <Alchemy/media/registry.hxx>
+#include <Alchemy/process/ffmpeg.hxx>
 #include <StormByte/system/process.hxx>
 #include <StormByte/util/string.hxx>
 
@@ -13,14 +14,14 @@ const std::vector<Codec::PointerType>& Registry::CodecRegistry() {
 		// Since we can't know the initialization order we need to initialize from ffmpeg's output also
 		static const std::regex codecRegex(R"(^ ([A-Z.]{6}) ([A-Za-z0-9_]+)\s+(.+?)(?:\s*\(decoders: ([^)]+)\))?(?:\s*\(encoders: ([^)]+)\))?$)");
 	
-		StormByte::System::Process process(Alchemy::FFMpeg::Executable(), {"-codecs", "-hide_banner"});
+		Process::FFMpeg ffmpeg({"-codecs", "-hide_banner"});
 		std::string result;
-		process >> result;
+		ffmpeg >> result;
 		#ifdef WINDOWS
 			// Windows have \r\n as line endings, so we need to remove the \r
 			result = StormByte::Util::String::SanitizeNewlines(result);
 		#endif
-		process.Wait();
+		ffmpeg.Wait();
 		std::vector<Codec::PointerType> codec_registry;
 		std::smatch match;
 		std::istringstream stream(result);

@@ -54,12 +54,6 @@ namespace Alchemy {
 			~FFProbe() noexcept 							= default;
 
 			/**
-			 * @brief Get the path to the FFMpeg executable.
-			 * @return The path to the FFMpeg executable.
-			 */
-			static const std::filesystem::path& 			Executable() noexcept; // Implemented by cmake generated file
-
-			/**
 			 * Processes the FFMpeg object.
 			 */
 			StormByte::Expected<FFMpeg, StreamError>		Process() const;

@@ -1,6 +1,7 @@
 #include <Alchemy/ffmpeg.hxx>
 #include <Alchemy/ffprobe.hxx>
 #include <Alchemy/media/registry.hxx>
+#include <Alchemy/process/ffmpeg.hxx>
 #include <StormByte/exception.hxx>
 #include <StormByte/system/process.hxx>
 #include <StormByte/util/string.hxx>
@@ -35,10 +36,10 @@ StormByte::Expected<FFMpeg, StreamError> FFMpeg::FromFile(const std::filesystem:
 
 const std::string FFMpeg::Version() {
 	static const std::regex versionRegex(R"(ffmpeg version (\d+\.\d+(?:\.\d+)?))");
-	StormByte::System::Process process(Executable(), {"-version"});
+	Process::FFMpeg ffmpeg({"-version"});
 	std::string result;
-	process >> result;
-	process.Wait();
+	ffmpeg >> result;
+	ffmpeg.Wait();
 	std::smatch match;
 	if (std::regex_search(result, match, versionRegex)) {
 		return match[1];

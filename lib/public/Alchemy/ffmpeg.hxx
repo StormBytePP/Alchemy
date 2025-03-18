@@ -58,12 +58,6 @@ namespace Alchemy {
 			virtual ~FFMpeg() noexcept 															= default;
 
 			/**
-			 * @brief Get the path to the FFMpeg executable.
-			 * @return The path to the FFMpeg executable.
-			 */
-			static const std::filesystem::path& 												Executable() noexcept; // Implemented by cmake generated file
-
-			/**
 			 * @brief Processes the file and creates a FFMpeg object.
 			 * @param path The path to the file.
 			 * @return The FFMpeg object.
@@ -93,6 +87,8 @@ namespace Alchemy {
 			 * @return The version of the FFMpeg library.
 			 */
 			static const std::string 															Version();
+
+			void test(const std::filesystem::path& path) const;
 
 		protected:
 			std::filesystem::path																m_path;						///< The path to the file.

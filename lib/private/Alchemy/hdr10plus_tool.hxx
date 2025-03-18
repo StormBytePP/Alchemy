@@ -54,12 +54,6 @@ namespace Alchemy {
 			~HDR10PlusTool() noexcept 											= default;
 
 			/**
-			 * @brief Get the path to the FFMpeg executable.
-			 * @return The path to the FFMpeg executable.
-			 */
-			static const std::filesystem::path& 								Executable() noexcept; // Implemented by cmake generated file
-
-			/**
 			 * @brief Checks if the file is HDR10+.
 			 * @param path The path to the file.
 			 * @return True if the file is HDR10+, false otherwise.

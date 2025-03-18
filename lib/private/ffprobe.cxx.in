@@ -1,9 +1,9 @@
-#include <Alchemy/ffprobe.hxx>
+#include <Alchemy/process/ffprobe.hxx>
 #include <StormByte/util/system.hxx>
 
-using namespace Alchemy;
+using namespace Alchemy::Process;
 
-const std::filesystem::path& FFProbe::Executable() noexcept {
+const std::filesystem::path& FFProbe::ExecutablePath() noexcept {
 	static const std::filesystem::path c_path = []() -> std::filesystem::path {
 		#ifdef WINDOWS
 		return StormByte::Util::System::CurrentPath() / @FFPROBE_EXECUTABLE@;

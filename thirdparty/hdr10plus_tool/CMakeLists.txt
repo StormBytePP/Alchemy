@@ -20,7 +20,7 @@ mark_as_advanced(HDR10PLUS_TOOL_EXECUTABLE)
 
 # Autogenerate a file for setting the FFMpeg paths
 configure_file(
-    ${CMAKE_SOURCE_DIR}/lib/private/hdr10plus_tool_info.cxx.in
-    ${CMAKE_BINARY_DIR}/hdr10plus_tool_info.cxx
+    ${CMAKE_SOURCE_DIR}/lib/private/hdr10plus_tool.cxx.in
+    ${CMAKE_BINARY_DIR}/hdr10plus_tool.cxx
     @ONLY
 )

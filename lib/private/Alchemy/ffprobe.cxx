@@ -1,6 +1,7 @@
 #include <Alchemy/ffprobe.hxx>
 #include <Alchemy/hdr10plus_tool.hxx>
 #include <Alchemy/media/registry.hxx>
+#include <Alchemy/process/ffprobe.hxx>
 #include <StormByte/expected.hxx>
 #include <StormByte/multimedia/media/property/video/color.hxx>
 #include <StormByte/multimedia/media/property/tags.hxx>
@@ -211,7 +212,7 @@ StormByte::Expected<FFMpeg, StreamError> FFProbe::Process() const {
 }
 
 StormByte::Expected<unsigned long, StreamError> FFProbe::FrameCount() const {
-	StormByte::System::Process ffprobe(Executable(), { "-v", "quiet", "-count_frames", "-select_streams", "v:0", "-show_entries", "stream=nb_read_frames", "-of", "csv=p=0", "-i", m_path.string() });
+	Process::FFProbe ffprobe({ "-v", "quiet", "-count_frames", "-select_streams", "v:0", "-show_entries", "stream=nb_read_frames", "-of", "csv=p=0", "-i", m_path.string() });
 	std::string result;
 	ffprobe >> result;
 	int ret = ffprobe.Wait();
@@ -247,7 +248,7 @@ const Json::Value FFProbe::Execute(std::vector<std::string>&& arguments, const s
     }
     const std::string params = oss.str();
 
-	StormByte::System::Process process(Executable(), std::move(arguments));
+	Process::FFProbe process(std::move(arguments));
 	std::string result;
 	std::string err;
 	process >> result;
