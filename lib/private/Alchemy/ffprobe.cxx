@@ -6,8 +6,11 @@
 #include <StormByte/multimedia/media/property/tags.hxx>
 #include <StormByte/multimedia/stream/audio.hxx>
 #include <StormByte/system/process.hxx>
+#include <StormByte/util/string.hxx>
 
+#include <algorithm>
 #include <format>
+#include <string>
 
 using namespace Alchemy;
 
@@ -205,6 +208,23 @@ StormByte::Expected<FFMpeg, StreamError> FFProbe::Process() const {
 	ffmpeg.Streams() = std::move(streams);
 
 	return ffmpeg;
+}
+
+StormByte::Expected<unsigned long, StreamError> FFProbe::FrameCount() const {
+	StormByte::System::Process ffprobe(Executable(), { "-v", "quiet", "-count_frames", "-select_streams", "v:0", "-show_entries", "stream=nb_read_frames", "-of", "csv=p=0", "-i", m_path.string() });
+	std::string result;
+	ffprobe >> result;
+	int ret = ffprobe.Wait();
+	if (ret != 0)
+		return StormByte::Unexpected<StreamError>("Failed to get frame count");
+
+	result.erase(std::remove(result.begin(), result.end(), '\n'), result.end());
+	result.erase(std::remove(result.begin(), result.end(), '\r'), result.end());
+
+	if (!StormByte::Util::String::IsNumeric(result))
+		return StormByte::Unexpected<StreamError>("Invalid frame count");
+
+	return std::stoul(result);
 }
 
 const Json::Value FFProbe::StreamList() const {

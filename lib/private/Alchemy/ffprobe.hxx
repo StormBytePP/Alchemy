@@ -64,6 +64,12 @@ namespace Alchemy {
 			 */
 			StormByte::Expected<FFMpeg, StreamError>		Process() const;
 
+			/**
+			 * @brief Get number of frames of the video stream
+			 * @return The number of frames of the video stream.
+			 */
+			StormByte::Expected<unsigned long, StreamError>	FrameCount() const;
+
 		private:
 			const std::filesystem::path m_path;				///< The path to the file.
 
