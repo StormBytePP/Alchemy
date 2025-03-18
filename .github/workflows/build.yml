@@ -52,8 +52,13 @@ jobs:
     - name: Install FFmpeg
       run: sudo apt install -y ffmpeg
 
-    - name: Pretending hdr10plus_tool is installed
-      run: sudo touch /usr/bin/hdr10plus_tool && sudo chmod +x /usr/bin/hdr10plus_tool
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+
+    - name: Install Cargo dependencies for HDR10Plus Tool
+      run: sudo apt install pkg-config libfontconfig1-dev
 
     - name: Configure CMake
       run: |
@@ -115,7 +120,7 @@ jobs:
 
       - name: Copy HDR10Plus Tool
         run: |
-          Copy-Item -Path "${{ github.workspace }}\build\bin\hdr10plus_tool -Destination "${{ github.workspace }}\build\test\bin" -Force
+          Copy-Item -Path "${{ github.workspace }}\build\bin\hdr10plus_tool.exe" -Destination "${{ github.workspace }}\build\test\bin" -Force
 
       - name: Run unit tests
         run: ctest --output-on-failure --test-dir ${{ github.workspace }}\build
