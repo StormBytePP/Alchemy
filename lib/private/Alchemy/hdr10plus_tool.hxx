@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Alchemy/visibility.h>
+#include <Alchemy/exception.hxx>
+#include <StormByte/alias.hxx>
 
 #include <filesystem>
 
@@ -63,7 +64,13 @@ namespace Alchemy {
 			 * @param path The path to the file.
 			 * @return True if the file is HDR10+, false otherwise.
 			 */
-			bool IsHDRPlus() const;
+			bool 																IsHDRPlus() const;
+
+			/**
+			 * @brief Extracts the metadata from the file.
+			 * @return The path to the metadata file.
+			 */
+			StormByte::Expected<std::filesystem::path, Exception> 				ExtractMetadata() const;
 
 		private:
 			std::filesystem::path m_path;	///< The path to the file
