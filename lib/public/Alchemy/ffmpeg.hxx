@@ -15,8 +15,8 @@
 namespace Json { class Value; }
 
 /**
- * @namespace Media
- * @brief All the media related classes and functions.
+ * @namespace Alchemy
+ * @brief All the Alchemy related classes and functions.
  */
 namespace Alchemy {
 	/**
@@ -69,6 +69,8 @@ namespace Alchemy {
 			 * @return The FFMpeg object.
 			 */
 			static StormByte::Expected<FFMpeg, StreamError> 									FromFile(const std::filesystem::path& path);
+
+			static bool 																		IsHDRPlus(const std::filesystem::path& path);
 
 			/**
 			 * @brief Gets the streams

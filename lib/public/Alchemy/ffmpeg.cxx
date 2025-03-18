@@ -37,6 +37,11 @@ StormByte::Expected<FFMpeg, StreamError> FFMpeg::FromFile(const std::filesystem:
 	return ffprobe.Process();
 }
 
+bool FFMpeg::IsHDRPlus(const std::filesystem::path& path) {
+	// ffmpeg -hide_banner -loglevel panic -i FILE -c:v copy -bsf:v hevc_mp4toannexb -f hevc - | hdr10plus_tool --verify extract -
+	StormByte::System::Process ffmpeg(c_path, {"hide_banner", "-loglevel", "panic", "-c:v", "copy", "-bsf:v", "hevc_mp4toannexb", "-f", "hevc", "-i", path.string(), "-"});
+}
+
 const std::string FFMpeg::Version() {
 	static const std::regex versionRegex(R"(ffmpeg version (\d+\.\d+(?:\.\d+)?))");
 	StormByte::System::Process process(c_path, {"-version"});

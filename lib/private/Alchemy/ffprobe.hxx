@@ -10,8 +10,8 @@
 #include <vector>
 
 /**
- * @namespace Media
- * @brief All the media related classes and functions.
+ * @namespace Alchemy
+ * @brief All the Alchemy related classes and functions.
  */
 namespace Alchemy {
 	class ALCHEMY_PRIVATE FFProbe final {
