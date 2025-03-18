@@ -2,7 +2,7 @@
 
 #include <Alchemy/exception.hxx>
 #include <Alchemy/media/alias.hxx>
-#include <StormByte/alias.hxx>
+#include <StormByte/expected.hxx>
 #include <StormByte/multimedia/media/property/tags.hxx>
 
 #include <filesystem>

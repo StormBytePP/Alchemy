@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Alchemy/media/codec.hxx>
-#include <StormByte/alias.hxx>
+#include <StormByte/expected.hxx>
 #include <StormByte/multimedia/exception.hxx>
 
 #include <unordered_map>
