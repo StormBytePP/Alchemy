@@ -1,16 +1,16 @@
 find_program(HDR10PLUS_TOOL_EXECUTABLE hdr10plus_tool)
 
 if (NOT HDR10PLUS_TOOL_EXECUTABLE)
-	if(WIN32)
-		message(STATUS "hdr10plus_tool not found, will be compiled from sources")
-		add_custom_target(hdr10plus_tool ALL
+	message(STATUS "hdr10plus_tool not found, will be compiled from sources")
+	add_custom_target(hdr10plus_tool ALL
 		cargo install -q --root "${CMAKE_BINARY_DIR}" --path "${CMAKE_CURRENT_LIST_DIR}/src"
-		BYPRODUCTS "${CMAKE_BINARY_DIR}/bin/thirdparty/hdr10plus_tool"
-		)
-		install(FILES "${CMAKE_BINARY_DIR}/bin/hdr10plus_tool.exe" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/thirdparty")
+		BYPRODUCTS "${CMAKE_BINARY_DIR}/bin/hdr10plus_tool"
+	)
+	if(WIN32)
+		install(FILES "${CMAKE_BINARY_DIR}/bin/hdr10plus_tool.exe" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/")
 		set(HDR10PLUS_TOOL_EXECUTABLE "thirdparty\\\\hdr10plus_tool.exe")
 	else()
-		message(FATAL_ERROR "hdr10plus_tool not found and not on Windows, aborting.")
+		set(HDR10PLUS_TOOL_EXECUTABLE "/usr/bin/hdr10plus_tool")
 	endif()
 else()
 	message(STATUS "Found hdr10plus_tool: ${HDR10PLUS_TOOL_EXECUTABLE}")

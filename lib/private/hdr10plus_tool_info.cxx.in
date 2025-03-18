@@ -1,3 +1,15 @@
-/*#include <Alchemy/media/hdr10plustool.hxx>
+#include <Alchemy/hdr10plus_tool.hxx>
+#include <StormByte/util/system.hxx>
 
-const std::filesystem::path HDR10PlusTool::c_hdr10plus_tool_path	= "@HDR10PLUS_TOOL_EXECUTABLE@";*/
+using namespace Alchemy;
+
+const std::filesystem::path& HDR10PlusTool::Executable() noexcept {
+	static const std::filesystem::path c_path = []() -> std::filesystem::path {
+		#ifdef WINDOWS
+		return StormByte::Util::System::CurrentPath() / @HDR10PLUS_TOOL_EXECUTABLE@;
+		#else
+		return "@HDR10PLUS_TOOL_EXECUTABLE@";
+		#endif
+	}();
+	return c_path;
+}

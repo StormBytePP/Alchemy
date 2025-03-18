@@ -68,6 +68,9 @@ jobs:
     - name: Build
       run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }}
 
+    - name: Copy HDR10Plus Tool
+      run: sudo cp ${{ github.workspace }}/build/bin/hdr10plus_tool /usr/bin/hdr10plus_tool
+
     - name: Run unit tests
       run: ctest --output-on-failure --test-dir ${{ github.workspace }}/build
 
@@ -92,10 +95,6 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
 
-      - name: Pretend hdr10plus_tool is installed
-        run: |
-          New-Item -ItemType File -Path "C:\Windows\System32\hdr10plus_tool.exe" -Force
-
       - name: Configure CMake
         run: cmake -B ${{ github.workspace }}\build -G "Ninja" -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TEST=ON -DWITH_SYSTEM_STORMBYTE=OFF
 
@@ -113,6 +112,10 @@ jobs:
       - name: Copy FFmpeg
         run: |
           Copy-Item -Path "${{ github.workspace }}\build\_deps\ffmpeg-src\bin" -Destination "${{ github.workspace }}\build\test" -Recurse -Force
+
+      - name: Copy HDR10Plus Tool
+        run: |
+          Copy-Item -Path "${{ github.workspace }}\build\bin\hdr10plus_tool -Destination "${{ github.workspace }}\build\test\bin" -Force
 
       - name: Run unit tests
         run: ctest --output-on-failure --test-dir ${{ github.workspace }}\build

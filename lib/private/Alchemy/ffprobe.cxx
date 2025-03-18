@@ -1,4 +1,5 @@
 #include <Alchemy/ffprobe.hxx>
+#include <Alchemy/hdr10plus_tool.hxx>
 #include <Alchemy/media/registry.hxx>
 #include <StormByte/alias.hxx>
 #include <StormByte/multimedia/media/property/video/color.hxx>
@@ -115,8 +116,8 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFProbe::ParseStrea
 
 				// Now we need to check which data we have and which data we take from default HDR color information
 				if (expected_blue && expected_green && expected_red && expected_white_point && expected_luminance) {
-					// We have all the data for a full HDR10 color information
-					color = std::make_shared<const StormByte::Multimedia::Media::Property::Video::HDR10>(
+					HDR10PlusTool hdr10plus_tool(m_path);
+					StormByte::Multimedia::Media::Property::Video::HDR10 _color(
 						std::move(pix_fmt), std::move(color_range), std::move(color_space), std::move(color_primaries), std::move(color_transfer),
 						expected_red.value(),
 						expected_green.value(),
@@ -125,10 +126,22 @@ StormByte::Expected<Media::Stream::PointerType, StreamError> FFProbe::ParseStrea
 						expected_luminance.value(),
 						std::move(light_level)
 					);
+					_color.HDR10Plus(HDR10PlusTool(m_path).IsHDRPlus());
+					// We have all the data for a full HDR10 color information
+					color = std::make_shared<const StormByte::Multimedia::Media::Property::Video::HDR10>(std::move(_color));
 				}
 				else {
 					// We don't have the full HDR Metadata, we will use the default HDR10 color information
-					color = std::make_shared<const StormByte::Multimedia::Media::Property::Video::HDR10>(std::move(pix_fmt), std::move(color_range), std::move(color_space), std::move(color_primaries), std::move(color_transfer));
+					HDR10PlusTool hdr10plus_tool(m_path);
+					StormByte::Multimedia::Media::Property::Video::HDR10 _color(
+						std::move(pix_fmt),
+						std::move(color_range),
+						std::move(color_space),
+						std::move(color_primaries),
+						std::move(color_transfer)
+					);
+					_color.HDR10Plus(HDR10PlusTool(m_path).IsHDRPlus());
+					color = std::make_shared<const StormByte::Multimedia::Media::Property::Video::HDR10>(std::move(_color));
 				}
 			}
 			else {
